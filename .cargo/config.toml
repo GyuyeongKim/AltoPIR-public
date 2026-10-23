@@ -1,0 +1,5 @@
+[build]
+rustflags = ["-C", "target-cpu=native"]
+
+[env]
+RUSTC_BOOTSTRAP = "spiral_rs"
