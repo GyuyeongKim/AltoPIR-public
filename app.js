@@ -251,8 +251,13 @@ async function submit(ev) {
     const ans = renderAnswer(db, d);
     $("answer").replaceChildren(ans);
     // the note goes above a list of passages, which can run below the fold, and under a short verdict
-    if (replayed != null && !d.error) $("answer")[db === "docs" ? "prepend" : "append"](el("p", { class: "replayed" + (db === "docs" ? " top" : "") },
-      `Shown after ${ms(replayed)}, the time of this lookup with ${chosen}. With AltoPIR it took ${ms(d.wire.time.prepare_ms + d.wire.time.round_trip_ms + d.wire.time.decrypt_ms + (d.wire.time.embed_ms || 0))}.`));
+    if (d.wire && !d.error) {
+      const t = d.wire.time, took = t.prepare_ms + t.round_trip_ms + t.decrypt_ms + (t.embed_ms || 0);
+      const note = replayed != null
+        ? `Shown after <b>${ms(replayed)}</b>, the time of this lookup with ${chosen}. With AltoPIR it took <b>${ms(took)}</b>.`
+        : `Answered in <b>${ms(took)}</b> with AltoPIR.`;
+      $("answer")[db === "docs" ? "prepend" : "append"](el("p", { class: "replayed" + (db === "docs" ? " top" : ""), html: note }));
+    }
     if (d.wire) renderWire(db, input, d, chosen); else $("wire").hidden = true;
   } catch (e) {
     if (mine !== seq) return;
@@ -269,7 +274,6 @@ function renderOperator() {
   const op = info.operator || {}, dbs = op.databases || {};
   if (!Object.keys(dbs).length) { $("operator").hidden = true; return; }
   $("operator").hidden = false;
-  const cloud = op.cloud;
   $("op-note").textContent = op.note || "";
   const cards = $("op-cards");
   cards.replaceChildren();
@@ -281,7 +285,6 @@ function renderOperator() {
     row("Lookups per second", int(o.qps), true);
     row("Lookups per day", words(o.qps * 86400));
     row("One lookup alone", ms(o.single_ms));
-    if (cloud) row("Per million lookups", "$" + (cloud.usd_per_hour / (o.qps * 3600) * 1e6).toFixed(2));
     const card = el("div", { class: "card" }, el("h3", {}, { passwords: "Leaked passwords", urls: "Unsafe links", docs: "Wikipedia" }[db]),
                     el("p", { class: "db" }, bytes(m.db_bytes) + " database"), dl);
     const b = baselines(db);
@@ -303,8 +306,8 @@ async function load() {
     $("dot").className = "dot ok";
     if (info.replay) {   // a static copy of the page answers from lookups recorded on the demo client
       at.here = "on the client"; at.machine = "the client";
-      $("server-text").textContent = info.replay.banner;
-      $("dot").className = "dot replay";
+      $("server").hidden = true;
+      $("server-text").textContent = "";
       $("lede-text").textContent = info.replay.lede;
       $("wire-title").textContent = "What left the client";
       $("stayed-title").textContent = "Stayed on the client";

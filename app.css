@@ -2,17 +2,17 @@
 :root {
   --paper: #ffffff;
   --surface: #f5f5f7;
-  --ink: #1d1d1f;
-  --ink-2: #6e6e73;
-  --ink-3: #86868b;
+  --ink: #111113;
+  --ink-2: #45454a;
+  --ink-3: #6e6e73;
   --rule: #e5e5ea;
   --rule-2: #e8e8ed;
-  --rule-strong: #c7c7cc;
-  --accent: #0071e3;
+  --rule-strong: #b8b8be;
+  --accent: #0062cc;
   --accent-soft: #eef5fe;
   --on-accent: #ffffff;
-  --good: #2a7d46;
-  --bad: #c9372c;
+  --good: #1f6e3b;
+  --bad: #b3261e;
   --t-embed: #d1d1d6;
   --t-encrypt: #aeaeb2;
   --t-decrypt: #8e8e93;
@@ -23,14 +23,14 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #161618; --surface: #1f1f23; --ink: #f2f2f4; --ink-2: #a1a1a6; --ink-3: #8e8e93;
+    --paper: #161618; --surface: #1f1f23; --ink: #ffffff; --ink-2: #c7c7cc; --ink-3: #a1a1a6;
     --rule: #2e2e32; --rule-2: #2a2a2e; --rule-strong: #48484d; --accent: #5ea2ff; --accent-soft: #17243a;
     --on-accent: #0b1a2e; --good: #5cc27e; --bad: #ff7a6e; --t-embed: #3a3a3e; --t-encrypt: #636366;
     --t-decrypt: #8e8e93; --hex: #a1a1a6;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #161618; --surface: #1f1f23; --ink: #f2f2f4; --ink-2: #a1a1a6; --ink-3: #8e8e93;
+  --paper: #161618; --surface: #1f1f23; --ink: #ffffff; --ink-2: #c7c7cc; --ink-3: #a1a1a6;
   --rule: #2e2e32; --rule-2: #2a2a2e; --rule-strong: #48484d; --accent: #5ea2ff; --accent-soft: #17243a;
   --on-accent: #0b1a2e; --good: #5cc27e; --bad: #ff7a6e; --t-embed: #3a3a3e; --t-encrypt: #636366;
   --t-decrypt: #8e8e93; --hex: #a1a1a6;
@@ -57,7 +57,7 @@ a:hover { text-decoration: underline; }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); flex: none; }
 .dot.ok { background: var(--good); }
 .dot.bad { background: var(--bad); }
-.dot.replay { background: var(--accent); }
+.server[hidden] { display: none; }
 
 /* lede */
 .lede { padding: 44px 0 30px; max-width: 760px; }
@@ -181,6 +181,7 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .wait .fill { height: 100%; width: 0; background: var(--ink-3); }
 .wait small { display: block; margin-top: 8px; color: var(--ink-3); font-size: 12.5px; }
 .replayed { margin: 14px 0 0; font-size: 13px; color: var(--ink-3); }
+.replayed b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .replayed.top { margin: 0 0 14px; }
 
 /* comparison */
