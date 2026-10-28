@@ -102,7 +102,7 @@ Phishing.Database? The database holds 16,384 buckets of 4 KB (64 MB), and every 
 **Wikipedia passages.** Which passages of Simple English Wikipedia answer a question? The client embeds the question,
 picks the two nearest of 8,192 public cluster centroids, and fetches those clusters of passages (1 GB in all).
 
-<p align="center"><img src="assets/demo_wikipedia.gif" width="820" alt="Recording of the demo page: the question how do volcanoes form returns passages about volcanoes in 100 ms; with InsPIRe the same lookup takes 372 ms"></p>
+<p align="center"><img src="assets/demo_wikipedia.gif" width="820" alt="Recording of the demo page: the question how do volcanoes form returns passages about volcanoes in 103 ms; with InsPIRe the same lookup takes 376 ms"></p>
 
 ## Quick start
 
