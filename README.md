@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick start</a> · <a href="#how-it-works">How it works</a> · <a href="#results">Results</a> ·
+  <a href="#quick-start">Quick start</a> · <a href="#how-it-works">How it works</a> · <a href="#results">Results</a> · <a href="#demo">Demo</a> ·
   <a href="#usage">Usage</a> · <a href="#reproducing-the-figures">Reproducing the figures</a> · <a href="#tests">Tests</a>
 </p>
 
@@ -80,6 +80,29 @@ packing matrix, and the first rows of every response are built once at setup.
 <sub>One socket (16 cores) of an Intel Xeon Silver 4514Y with AMX, records of 32 KB. The existing schemes are the
 official implementations of InsPIRe, Valar (IPIR+SP), and ReinsPIRe, each in its fastest configuration on the same 16
 cores.</sub>
+
+## Demo
+
+Three private lookups on real data, recorded from a demo page on a client machine that queries AltoPIR servers over the
+network (one socket of the Xeon Silver 4514Y above). The client hashes or embeds the input and encrypts the request,
+and the server reads its whole database for every lookup without learning the input or the bucket it falls in.
+"Answer with" shows the same lookup at the speed of an existing hintless scheme, measured with its official
+implementation on the same server. The demo page is not part of this repository.
+
+**Leaked passwords.** Is a password among the 2.07 billion leaked passwords of Have I Been Pwned's Pwned Passwords,
+and how often does it appear? The database holds 131,072 buckets of 90 KB (11.25 GB).
+
+<p align="center"><img src="assets/demo_passwords.gif" width="820" alt="Recording of the demo page: the password iloveyou is found among 2.07 billion leaked passwords in 143 ms, with 576 KB sent and 315 KB received; with ReinsPIRe the same lookup takes 1.13 s"></p>
+
+**Unsafe links.** Is a link, its host, or one of its parent domains among the 1.1 million phishing links and domains of
+Phishing.Database? The database holds 16,384 buckets of 4 KB (64 MB), and every link sends six requests.
+
+<p align="center"><img src="assets/demo_links.gif" width="820" alt="Recording of the demo page: a phishing link is listed and a Wikipedia link is not, each in a few milliseconds of server time"></p>
+
+**Wikipedia passages.** Which passages of Simple English Wikipedia answer a question? The client embeds the question,
+picks the two nearest of 8,192 public cluster centroids, and fetches those clusters of passages (1 GB in all).
+
+<p align="center"><img src="assets/demo_wikipedia.gif" width="820" alt="Recording of the demo page: the question how do volcanoes form returns passages about volcanoes in 100 ms; with InsPIRe the same lookup takes 372 ms"></p>
 
 ## Quick start
 
