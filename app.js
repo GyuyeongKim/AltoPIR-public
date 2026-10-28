@@ -177,10 +177,10 @@ function renderWire(db, input, d, chosen) {
   $("hex").textContent = w.preview_hex.match(/.{1,8}/g).join(" ").match(/.{1,36}/g).join("\n");
 
   const t = w.time, parts = [];
-  if (t.embed_ms != null) parts.push([`Embed the question ${at.here}`, t.embed_ms, "var(--rule)"]);
-  parts.push([`Encrypt ${at.here}`, t.prepare_ms, "var(--ink-3)"]);
-  parts.push(["Network and server", t.round_trip_ms, "var(--coral-fill)"]);
-  parts.push([`Decrypt ${at.here}`, t.decrypt_ms, "var(--blue)"]);
+  if (t.embed_ms != null) parts.push([`Embed the question ${at.here}`, t.embed_ms, "var(--t-embed)"]);
+  parts.push([`Encrypt ${at.here}`, t.prepare_ms, "var(--t-encrypt)"]);
+  parts.push(["Network and server", t.round_trip_ms, "var(--accent)"]);
+  parts.push([`Decrypt ${at.here}`, t.decrypt_ms, "var(--t-decrypt)"]);
   const total = parts.reduce((s, p) => s + p[1], 0);
   $("bar").replaceChildren(...parts.map(([n, v, c]) => el("span", { style: `width:${(100 * v / total).toFixed(2)}%;background:${c}`, title: n })));
   const lg = $("legend");
@@ -289,7 +289,7 @@ function renderOperator() {
       const best = Object.entries(b.schemes).filter(([, s]) => s.qps).sort((x, y) => y[1].qps - x[1].qps)[0];
       if (best) card.append(el("p", { class: "vs" }, `Fastest existing scheme: ${best[1].qps < 10 ? best[1].qps.toFixed(1) : int(best[1].qps)} lookups per second (${best[0]}${b.size_note ? ", " + b.size_note : ""}).`));
     }
-    if (db === current) card.style.background = "var(--surface)";
+    if (db === current) card.classList.add("current");
     cards.append(card);
   }
 }
