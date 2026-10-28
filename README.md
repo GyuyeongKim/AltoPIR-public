@@ -111,10 +111,10 @@ git clone https://github.com/GyuyeongKim/AltoPIR-public.git
 cd AltoPIR-public
 cargo build --release
 cargo test --release
-./examples/demo.sh
+./examples/quickstart.sh
 ```
 
-The demo starts a local server with 8,192 synthetic records of 32 KB. It fetches three records and checks them, then
+The script starts a local server with 8,192 synthetic records of 32 KB. It fetches three records and checks them, then
 sends 200 queries per second for five seconds and decrypts every response.
 
 > [!NOTE]
@@ -295,7 +295,7 @@ src/
 ├── bin/altopir.rs      server, query client, load generator, benchmark
 └── *.rs, matmul.cpp    scheme: client, offline precomputation, reference server
 tests/engine.rs         engine tests
-examples/demo.sh        local demo
+examples/quickstart.sh  quick start on synthetic records
 baselines/              benchmark programs for the existing schemes, built against their official code
 scripts/reproduce.sh    runs the measurements and draws the figures (with scripts/plot.py)
 ```
