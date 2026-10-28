@@ -61,6 +61,9 @@ let current = "passwords";
 let seq = 0, busy = false;   // only the latest request may render
 let autoShown = false;       // an example password is shown until the user types their own
 let scheme = "AltoPIR";
+const CROWD = 100;   // lookups that arrive at once on a busy server
+let crowd = true;    // busy by default; idle shows one lookup alone
+let last = null;     // the lookup on screen, so the comparison follows the scheme and load pickers
 const sleep = (t) => new Promise((r) => setTimeout(r, t));
 function baselines(db) { return ((info.operator || {}).baselines || {})[db]; }
 // server time of k requests from a scheme's measured single-query time and throughput on this server
@@ -97,7 +100,7 @@ function setTab(db) {
     };
     ex.append(b);
   }
-  $("answer").replaceChildren(el("p", { class: "placeholder" }, replay ? "Pick one of the recorded lookups above. Its answer appears after the time it took when it was recorded." : c.idle));
+  $("answer").replaceChildren(el("p", { class: "placeholder" }, replay ? "Pick one of the recorded lookups above." : c.idle));
   $("wire").hidden = true;
   renderSchemes(db);
   renderOperator();
@@ -107,16 +110,29 @@ function setTab(db) {
 function renderSchemes(db) {
   const b = baselines(db), box = $("schemes");
   if (!b) { box.hidden = true; scheme = "AltoPIR"; return; }
-  if (scheme !== "AltoPIR" && !b.schemes[scheme]) scheme = "AltoPIR";
+  // a scheme without a measured throughput (YPIR+SP runs on one core) has no time for many lookups at once
+  const usable = (name) => name === "AltoPIR" || (b.schemes[name] && (!crowd || b.schemes[name].qps));
+  if (!usable(scheme)) scheme = "AltoPIR";
   box.hidden = false;
-  box.replaceChildren(el("span", {}, "Answer with"));
+  const who = el("div", { class: "row" }, el("span", {}, "Answer with"));
   for (const name of ["AltoPIR", ...Object.keys(b.schemes)]) {
     const btn = el("button", { type: "button", class: name === "AltoPIR" ? "ours" : "", "aria-pressed": String(name === scheme) }, name);
-    btn.onclick = () => { scheme = name; renderSchemes(db); };
-    box.append(btn);
+    if (!usable(name)) { btn.disabled = true; btn.title = "Measured on one core only, so it has no time for many lookups at once"; }
+    btn.onclick = () => { scheme = name; renderSchemes(db); refreshCompare(db); };
+    who.append(btn);
   }
-  if (scheme !== "AltoPIR") box.append(el("p", { class: "why" },
-    `The answer comes from the same database; it appears after the time ${scheme} needs on this server, which we measured with its official implementation.`));
+  const load = el("div", { class: "row" }, el("span", {}, "Server"));
+  for (const [label, value] of [[`Busy, ${CROWD} lookups at once`, true], ["Idle, this lookup alone", false]]) {
+    const btn = el("button", { type: "button", "aria-pressed": String(value === crowd) }, label);
+    btn.onclick = () => { crowd = value; renderSchemes(db); refreshCompare(db); };
+    load.append(btn);
+  }
+  const why = crowd
+    ? `${CROWD} lookups like this one arrive together. Each scheme answers all of them at the throughput measured on this server, and the answer appears when the last one is done.`
+    : scheme !== "AltoPIR"
+      ? `The answer comes from the same database; it appears after the time ${scheme} needs on this server, which we measured with its official implementation.`
+      : null;
+  box.replaceChildren(who, load, why ? el("p", { class: "why" }, why) : "");
 }
 
 function verdict(kind, head, sub) {
@@ -187,17 +203,21 @@ function renderWire(db, input, d, chosen) {
   lg.replaceChildren();
   for (const [n, v, c] of parts) lg.append(el("dt", { style: `background:${c}` }), el("dd", {}, n), el("dd", { class: "v" }, ms(v)));
   lg.append(el("dt", { class: "total" }), el("dd", { class: "total" }, "Total"), el("dd", { class: "v total" }, ms(total)));
+  last = { db, d };
   renderCompare(db, d, chosen);
   $("wire").hidden = false;
 }
+
+function refreshCompare(db) { if (last && last.db === db && !$("wire").hidden) renderCompare(db, last.d, scheme); }
 
 function renderCompare(db, d, chosen) {
   const b = baselines(db), box = $("compare");
   if (!b) { box.hidden = true; return; }
   // every bar uses the same rule: measured single-query time and throughput on this server, for this many requests
-  const k = d.wire.requests, ours = ((info.operator || {}).databases || {})[db];
+  const k = d.wire.requests * (crowd ? CROWD : 1), ours = ((info.operator || {}).databases || {})[db];
   const rows = ours ? [["AltoPIR", estMs(ours, k)]] : [];
-  for (const [name, s] of Object.entries(b.schemes)) rows.push([name, estMs(s, k)]);
+  for (const [name, s] of Object.entries(b.schemes)) rows.push([name, crowd && !s.qps ? null : estMs(s, k)]);
+  $("compare-title").textContent = crowd ? `Server time for ${CROWD} lookups at once` : "Server time of this lookup alone";
   const bars = (box, rows, fmt) => {
     const top = Math.max(...rows.filter((r) => r[1] != null).map((r) => r[1]));
     box.replaceChildren();
@@ -230,18 +250,23 @@ async function submit(ev) {
                                           body: JSON.stringify({ input }) });
     const d = await r.json();
     if (mine !== seq || db !== current) return;
-    const base = chosen !== "AltoPIR" && d.wire && baselines(db) ? baselines(db).schemes[chosen] : null;
-    let replayed = null;
-    if (base) {   // replay the measured speed of the chosen scheme: same client work and network, its server time
+    const many = crowd, n = many ? CROWD : 1;
+    const ours = ((info.operator || {}).databases || {})[db];
+    const base = !d.wire || !baselines(db) ? null : chosen === "AltoPIR" ? ours : baselines(db).schemes[chosen];
+    let replayed = null, oursBusy = null;
+    if (base && (many || chosen !== "AltoPIR") && (!many || base.qps)) {
+      // the chosen scheme's measured speed: same client work and network, its server time for n lookups at once
       const t = d.wire.time, k = d.wire.requests, client = t.prepare_ms + t.decrypt_ms + (t.embed_ms || 0);
-      const ours = ((info.operator || {}).databases || {})[db];
       const network = ours ? Math.max(0, t.round_trip_ms - estMs(ours, k)) : 0;
-      const target = client + network + estMs(base, k), left = target - (performance.now() - t0);
+      const target = client + network + estMs(base, k * n), left = target - (performance.now() - t0);
       replayed = target;
+      if (ours) oursBusy = client + network + estMs(ours, k * n);
       if (left > 0) {
         const fill = el("div", { class: "fill" });
         $("answer").replaceChildren(el("div", { class: "wait" }, el("p", {}, `${chosen} is answering`),
-          el("div", { class: "track" }, fill), el("small", {}, `${ms(target)} in all, at the speed measured on this server`)));
+          el("div", { class: "track" }, fill), el("small", {}, many
+            ? `${ms(target)} in all, for ${CROWD} lookups at once at the throughput measured on this server`
+            : `${ms(target)} in all, at the speed measured on this server`)));
         document.body.classList.remove("loading");
         requestAnimationFrame(() => { fill.style.transition = `width ${left}ms linear`; fill.style.width = "100%"; });
         await sleep(left);
@@ -253,9 +278,10 @@ async function submit(ev) {
     // the note goes above a list of passages, which can run below the fold, and under a short verdict
     if (d.wire && !d.error) {
       const t = d.wire.time, took = t.prepare_ms + t.round_trip_ms + t.decrypt_ms + (t.embed_ms || 0);
-      const note = replayed != null
-        ? `Shown after <b>${ms(replayed)}</b>, the time of this lookup with ${chosen}. With AltoPIR it took <b>${ms(took)}</b>.`
-        : `Answered in <b>${ms(took)}</b> with AltoPIR.`;
+      const note = replayed == null ? `Answered in <b>${ms(took)}</b> with AltoPIR.`
+        : !many ? `Shown after <b>${ms(replayed)}</b>, the time of this lookup with ${chosen}. With AltoPIR it took <b>${ms(took)}</b>.`
+        : chosen === "AltoPIR" ? `Shown after <b>${ms(replayed)}</b>, when AltoPIR answers ${CROWD} lookups that arrive at once. This lookup alone took <b>${ms(took)}</b>.`
+        : `Shown after <b>${ms(replayed)}</b>, when ${chosen} answers ${CROWD} lookups that arrive at once. AltoPIR answers them in <b>${ms(oursBusy)}</b>.`;
       $("answer")[db === "docs" ? "prepend" : "append"](el("p", { class: "replayed" + (db === "docs" ? " top" : ""), html: note }));
     }
     if (d.wire) renderWire(db, input, d, chosen); else $("wire").hidden = true;
@@ -321,12 +347,22 @@ async function load() {
   const qs = new URLSearchParams(location.search);
   if (qs.get("theme")) document.documentElement.dataset.theme = qs.get("theme");
   if (qs.get("scheme")) scheme = qs.get("scheme");
+  if (qs.get("load") === "idle") crowd = false;
+  const dark = document.documentElement.dataset.theme === "dark" ||
+    (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  $("theme").textContent = dark ? "Light" : "Dark";
   setTab(Object.hasOwn(DBS, qs.get("db") || "") ? qs.get("db") : current);
   if (qs.get("q")) { $("input").value = qs.get("q"); submit(); }
 }
 
 document.querySelectorAll(".tab").forEach((t) => (t.onclick = () => setTab(t.dataset.db)));
 $("form").addEventListener("submit", submit);
+$("theme").onclick = () => {
+  const t = $("theme").textContent === "Dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("theme", t); } catch (e) {}
+  $("theme").textContent = t === "dark" ? "Light" : "Dark";
+};
 $("input").addEventListener("input", () => {
   if (!autoShown) return;
   autoShown = false;

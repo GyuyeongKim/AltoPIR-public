@@ -58,6 +58,10 @@ a:hover { text-decoration: underline; }
 .dot.ok { background: var(--good); }
 .dot.bad { background: var(--bad); }
 .server[hidden] { display: none; }
+.mast-right { display: flex; align-items: center; gap: 18px; }
+.link { appearance: none; background: none; border: 0; padding: 4px 0; font: 500 14px var(--sans); color: var(--accent);
+  cursor: pointer; }
+.link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* lede */
 .lede { padding: 44px 0 30px; max-width: 760px; }
@@ -83,7 +87,7 @@ a:hover { text-decoration: underline; }
 .field input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); padding: 14px 14px;
   font: 400 17px/1.2 var(--sans); outline: none; }
 body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font-family: var(--mono); }
-.field input::placeholder { color: var(--ink-3); }
+.field input::placeholder { color: var(--ink-3); font-family: var(--sans); }
 .field input[readonly] { cursor: default; }
 .reveal { border: 0; border-left: 1px solid var(--rule); background: transparent; color: var(--ink-2);
   font: 500 13px var(--sans); padding: 0 14px; cursor: pointer; }
@@ -168,13 +172,16 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .waiting.answer-wait { opacity: 1; }
 
 /* scheme selector */
-.schemes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 18px; padding-top: 14px;
-  border-top: 1px solid var(--rule-2); font-size: 13px; color: var(--ink-3); }
+.schemes { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule-2); font-size: 13px; color: var(--ink-3); }
+.schemes .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.schemes .row + .row { margin-top: 8px; }
+.schemes .row > span { min-width: 84px; }
+.schemes button:disabled { opacity: 0.4; cursor: not-allowed; }
 .schemes button { appearance: none; border: 1px solid var(--rule-strong); border-radius: 8px; background: var(--paper);
   padding: 4px 10px; cursor: pointer; color: var(--ink-2); font: 500 13px var(--sans); }
 .schemes button:hover { color: var(--ink); }
 .schemes button[aria-pressed="true"] { color: var(--accent); background: var(--accent-soft); border-color: var(--accent-soft); }
-.schemes .why { flex-basis: 100%; margin: 2px 0 0; font-size: 12.5px; color: var(--ink-3); }
+.schemes .why { margin: 10px 0 0; font-size: 12.5px; color: var(--ink-3); }
 .wait { border-left: 3px solid var(--rule); padding: 4px 0 6px 20px; }
 .wait p { margin: 0 0 12px; color: var(--ink-2); font: 600 20px/1.3 var(--display); letter-spacing: -0.01em; }
 .wait .track { height: 4px; background: var(--rule-2); border-radius: 2px; overflow: hidden; }
@@ -205,7 +212,7 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
   .field input { font-size: 16px; }
   .tabs { gap: 20px; }
   .tab { font-size: 14px; }
-  .masthead { flex-direction: column; align-items: flex-start; }
+  .masthead { flex-wrap: wrap; }
   .server { text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }
