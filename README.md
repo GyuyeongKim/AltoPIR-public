@@ -83,16 +83,19 @@ cores.</sub>
 
 ## Demo
 
+**[Try the recorded demo in your browser](https://gyuyeongkim.github.io/AltoPIR-public/).** The page replays 27 lookups
+recorded from the demo client and the AltoPIR servers, each after the time it took. It needs no server.
+
 Three private lookups on real data, recorded from a demo page on a client machine that queries AltoPIR servers over the
 network (one socket of the Xeon Silver 4514Y above). The client hashes or embeds the input and encrypts the request,
 and the server reads its whole database for every lookup without learning the input or the bucket it falls in.
 "Answer with" shows the same lookup at the speed of an existing hintless scheme, measured with its official
-implementation on the same server. The demo page is not part of this repository.
+implementation on the same server. The demo client and servers are not part of this repository.
 
 **Leaked passwords.** Is a password among the 2.07 billion leaked passwords of Have I Been Pwned's Pwned Passwords,
 and how often does it appear? The database holds 131,072 buckets of 90 KB (11.25 GB).
 
-<p align="center"><img src="assets/demo_passwords.gif" width="820" alt="Recording of the demo page: the password iloveyou is found among 2.07 billion leaked passwords in 143 ms, with 576 KB sent and 315 KB received; with ReinsPIRe the same lookup takes 1.13 s"></p>
+<p align="center"><img src="assets/demo_passwords.gif" width="820" alt="Recording of the demo page: the password iloveyou is found among 2.07 billion leaked passwords in 143 ms, with 576 KB sent and 315 KB received; with ReinsPIRe the same lookup takes 1.14 s"></p>
 
 **Unsafe links.** Is a link, its host, or one of its parent domains among the 1.1 million phishing links and domains of
 Phishing.Database? The database holds 16,384 buckets of 4 KB (64 MB), and every link sends six requests.
@@ -102,7 +105,7 @@ Phishing.Database? The database holds 16,384 buckets of 4 KB (64 MB), and every 
 **Wikipedia passages.** Which passages of Simple English Wikipedia answer a question? The client embeds the question,
 picks the two nearest of 8,192 public cluster centroids, and fetches those clusters of passages (1 GB in all).
 
-<p align="center"><img src="assets/demo_wikipedia.gif" width="820" alt="Recording of the demo page: the question how do volcanoes form returns passages about volcanoes in 103 ms; with InsPIRe the same lookup takes 376 ms"></p>
+<p align="center"><img src="assets/demo_wikipedia.gif" width="820" alt="Recording of the demo page: the question how do volcanoes form returns passages about volcanoes in 102 ms; with InsPIRe the same lookup takes 382 ms"></p>
 
 ## Quick start
 
