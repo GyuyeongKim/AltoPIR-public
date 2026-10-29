@@ -4,7 +4,7 @@
 (() => {
   const network = window.fetch.bind(window);
   let recorded = null;
-  const load = () => recorded || (recorded = network("replay.json?v=b6237cf364").then((r) => r.json()));
+  const load = () => recorded || (recorded = network("replay.json?v=fe9d3a3859").then((r) => r.json()));
   const reply = (body) => new Response(JSON.stringify(body), { headers: { "Content-Type": "application/json" } });
   const sleep = (t) => new Promise((r) => setTimeout(r, t));
   window.fetch = async (url, opts = {}) => {

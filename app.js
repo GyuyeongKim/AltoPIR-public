@@ -158,7 +158,7 @@ const KO = {
   "rec.baselineNote.urls": "서버 처리 시간은 모두 이 서버에서 측정했습니다. AltoPIR 측정에는 현재 데이터베이스를 사용했습니다. 나머지 방식은 공식 구현으로 64 MB 데이터베이스에서 측정했으며, 레코드 크기는 32 KB입니다.",
   "rec.sizeNote.same": "같은 크기에서 측정",
   "rec.sizeNote.at8gb": "8 GB에서 측정",
-  "rec.operatorNote": "Xeon Silver 4514Y 소켓 하나에서 연산용 코어 15개로 조회를 최대 128개씩 묶어 측정했습니다. AltoPIR 논문에서는 1 GB~64 GB 데이터베이스로 비교했습니다. 같은 코어를 사용했을 때 AltoPIR의 쿼리 처리량은 힌트 없이 동작하는 기존 방식 중 가장 빠른 방식보다 24~50배 높았습니다.",
+  "rec.operatorNote": "Xeon Silver 4514Y 서버에서 연산에 코어 15개를 쓰고, 조회를 최대 128개씩 묶어 측정했습니다. AltoPIR 논문에서는 1 GB~64 GB 데이터베이스로 성능을 비교했습니다. 같은 코어를 사용했을 때 AltoPIR의 쿼리 처리량은 힌트 없이 동작하는 기존 방식 중 가장 빠른 방식의 24~50배였습니다.",
   "rec.error.notRecorded": "이 페이지에는 미리 기록한 조회만 있습니다. 위에서 하나를 선택하세요.",
 };
 // text that comes with the recording, by its English original -> its key in KO
@@ -179,7 +179,7 @@ const KO_RECORDED = {
   "Server time measured on this server: AltoPIR on this database; the others with their official implementations on a 64 MB database with their 32 KB records.": "rec.baselineNote.urls",
   "same size": "rec.sizeNote.same",
   "measured at 8 GB": "rec.sizeNote.at8gb",
-  "Measured on one socket of a Xeon Silver 4514Y (15 engine cores), with batches of up to 128 lookups. In the AltoPIR paper, the fastest existing hintless scheme answers 24 to 50 times fewer queries on the same cores, for databases of 1 GB to 64 GB.": "rec.operatorNote",
+  "Measured on a Xeon Silver 4514Y server with 15 engine cores and batches of up to 128 lookups. In the AltoPIR paper, the fastest existing hintless scheme answers 24 to 50 times fewer queries on the same cores, for databases of 1 GB to 64 GB.": "rec.operatorNote",
   "This page holds only the recorded lookups. Pick one of them above.": "rec.error.notRecorded",
 };
 const fill = (s, v) => s.replace(/\{(\w+)\}/g, (m, k) => (k in v ? String(v[k]) : m));
@@ -629,11 +629,8 @@ function applyLang() {
   renderOperator();
 }
 
-function initialLang() {
-  const q = new URLSearchParams(location.search).get("lang");
-  if (q === "ko" || q === "en") return q;
-  try { return localStorage.getItem("lang") === "ko" ? "ko" : "en"; } catch (e) { return "en"; }
-}
+// a plain URL opens in English; only ?lang=ko opens Korean
+function initialLang() { return new URLSearchParams(location.search).get("lang") === "ko" ? "ko" : "en"; }
 
 async function load() {
   try {
@@ -669,13 +666,13 @@ $("theme").onclick = () => {
   try { localStorage.setItem("theme", th); } catch (e) {}
   $("theme").textContent = t(th === "dark" ? "light" : "dark");
 };
-// ?lang=ko or ?lang=en overrides the stored choice, so a link opens in its language
+// the switch writes the language into the URL (?lang=ko, none for English), so a reload keeps it
 $("lang").onclick = () => {
   lang = lang === "ko" ? "en" : "ko";
-  try { localStorage.setItem("lang", lang); } catch (e) {}
   try {
-    const qs = new URLSearchParams(location.search);
-    if (qs.has("lang")) { qs.set("lang", lang); history.replaceState(null, "", "?" + qs + location.hash); }
+    const u = new URL(location.href);
+    if (lang === "en") u.searchParams.delete("lang"); else u.searchParams.set("lang", lang);
+    history.replaceState(null, "", u);
   } catch (e) {}
   applyLang();
 };
