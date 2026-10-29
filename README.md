@@ -52,7 +52,7 @@ CPUs. It needs no GPU, and the database stays in the main memory of the server.
 
 Reader threads put incoming requests in one queue. Whenever the engine is free, it takes every waiting request as the
 next batch, up to `--max-batch`. Batches grow when many clients query at once, and a request that arrives alone is
-answered alone. The engine answers each batch in four steps on the cores of one socket.
+answered alone. The engine answers each batch in four steps on its cores.
 
 1. **Validate in place.** Checks each request in the buffer where it arrived, and rejects a malformed request exactly
    when the decoder of the scheme would.
@@ -77,7 +77,7 @@ packing matrix, and the first rows of every response are built once at setup.
 | 32 GB | 1M | 2.76 QPS (InsPIRe) | 136 QPS | 49.2× |
 | 64 GB | 2M | 1.45 QPS (InsPIRe) | 70.2 QPS | 48.6× |
 
-<sub>One socket (16 cores) of an Intel Xeon Silver 4514Y with AMX, records of 32 KB. The existing schemes are the
+<sub>16 cores of an Intel Xeon Silver 4514Y server with AMX, records of 32 KB. The existing schemes are the
 official implementations of InsPIRe, Valar (IPIR+SP), and ReinsPIRe, each in its fastest configuration on the same 16
 cores.</sub>
 
@@ -87,7 +87,7 @@ cores.</sub>
 recorded from the demo client and the AltoPIR servers, each after the time it took. It needs no server.
 
 Three private lookups on real data, recorded from a demo page on a client machine that queries AltoPIR servers over the
-network (one socket of the Xeon Silver 4514Y above). The client hashes or embeds the input and encrypts the request,
+network. The client hashes or embeds the input and encrypts the request,
 and the server reads its whole database for every lookup without learning the input or the bucket it falls in.
 "Answer with" shows the same lookup at the speed of an existing hintless scheme, measured with its official
 implementation on the same server. The demo client and servers are not part of this repository.
@@ -145,8 +145,8 @@ numactl --membind=1 target/release/altopir server --db records.bin --listen 0.0.
 ```
 
 The first line serves 32,768 synthetic records, and the second serves the records in `records.bin`. The engine runs on
-15 cores of the second socket, and the threads that read requests and write responses share the remaining core of that
-socket. Bind the memory to the socket of the engine cores, as with `numactl` above. The server prints one JSON line
+cores 17-31, and the threads that read requests and write responses share core 16. Bind the memory to the NUMA node of
+these cores, as `numactl --membind=1` does above. The server prints one JSON line
 when it is ready, with the request and response sizes and the setup times, and `altopir stop ADDR` stops it.
 
 The setup builds two copies of the database, one in the layout of the scheme and one in the layout of the tiles,
@@ -165,7 +165,7 @@ node of the engine cores, so a database whose setup does not fit in the memory o
 | `--db FILE` | | Serve the records in FILE, `--record-bytes` each. The count is padded to a power of two of at least 2,048 with empty records. |
 | `--record-bytes B` | `32768` | Record size, a multiple of 2,048 bytes |
 | `--listen ADDR` | `0.0.0.0:7000` | Address and port |
-| `--cpus LIST` | all allowed | Cores of the engine, for example `16-31`. Use the cores of one socket. |
+| `--cpus LIST` | all allowed | Cores of the engine, for example `16-31`, on the NUMA node that holds the memory. |
 | `--net-cpus LIST` | the engine cores | Cores of the threads that read requests and write responses |
 | `--setup-cpus LIST` | the engine cores | Cores of the setup |
 | `--max-batch N` | `128` | Largest batch |
