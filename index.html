@@ -5,9 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AltoPIR · Private lookups</title>
 <meta name="description" content="Recorded private lookups with AltoPIR: leaked passwords, unsafe links and Wikipedia passages, answered without the server learning what was asked.">
-<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css?v=95df315356">
 <script>
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+try {
+  const l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("lang");
+  if (l === "ko") document.documentElement.lang = "ko";
+} catch (e) {}
 </script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%230062cc%22/%3E%3Ccircle cx=%228%22 cy=%226.5%22 r=%222.2%22 fill=%22%23ffffff%22/%3E%3Crect x=%227%22 y=%227.5%22 width=%222%22 height=%225%22 fill=%22%23ffffff%22/%3E%3C/svg%3E">
 </head>
@@ -17,24 +21,26 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
 <header class="masthead">
   <div class="brand">
     <span class="wordmark">AltoPIR</span>
-    <span class="tag">private lookups on a CPU server</span>
+    <span class="tag" data-i18n="tag">private lookups on a CPU server</span>
   </div>
   <div class="mast-right">
     <div class="server" id="server"><span class="dot" id="dot"></span><span id="server-text">Connecting to the server</span></div>
-    <button id="theme" class="link" type="button" aria-label="Switch the color theme">Dark</button>
+    <a class="link ico-link" href="https://github.com/GyuyeongKim/AltoPIR-public"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+    <button id="lang" class="link" type="button" aria-label="Switch the language" data-i18n-aria="langAria">한국어</button>
+    <button id="theme" class="link" type="button" aria-label="Switch the color theme" data-i18n-aria="themeAria">Dark</button>
   </div>
 </header>
 
 <section class="lede">
-  <h1>Ask a database a question without telling it what you asked.</h1>
-  <p id="lede-text">Your input never leaves this machine. It is hashed and encrypted here, the server computes over every record of its
+  <h1 data-i18n="h1">Ask a database a question without telling it what you asked.</h1>
+  <p id="lede-text" data-i18n="lede">Your input never leaves this machine. It is hashed and encrypted here, the server computes over every record of its
   database, and the answer comes back in a form that only this machine can read.</p>
 </section>
 
-<nav class="tabs" role="tablist" aria-label="Databases">
-  <button role="tab" class="tab" data-db="passwords" aria-selected="true">Leaked passwords</button>
-  <button role="tab" class="tab" data-db="urls" aria-selected="false">Unsafe links</button>
-  <button role="tab" class="tab" data-db="docs" aria-selected="false">Wikipedia</button>
+<nav class="tabs" role="tablist" aria-label="Databases" data-i18n-aria="tabsAria">
+  <button role="tab" class="tab" data-db="passwords" aria-selected="true" data-i18n="dbPasswords">Leaked passwords</button>
+  <button role="tab" class="tab" data-db="urls" aria-selected="false" data-i18n="dbUrls">Unsafe links</button>
+  <button role="tab" class="tab" data-db="docs" aria-selected="false" data-i18n="dbDocs">Wikipedia</button>
 </nav>
 
 <main class="grid">
@@ -44,7 +50,7 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
       <label for="input" class="label" id="input-label">Password</label>
       <div class="field">
         <input id="input" type="password" spellcheck="false">
-        <button type="button" class="reveal" id="reveal" aria-label="Show the password">Show</button>
+        <button type="button" class="reveal" id="reveal" aria-label="Show the password" data-i18n-aria="revealAria">Show</button>
         <button type="submit" class="go" id="go">Check</button>
       </div>
       <div class="examples" id="examples"></div>
@@ -63,13 +69,13 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
         <ul id="stayed"></ul>
       </div>
       <div>
-        <h3>The server received</h3>
+        <h3 data-i18n="received">The server received</h3>
         <ul id="sent"></ul>
       </div>
     </div>
     <figure class="hex">
       <pre id="hex"></pre>
-      <figcaption>96 bytes from the start of the encrypted key in the request. The rest looks the same to the server.</figcaption>
+      <figcaption data-i18n="hexCap">96 bytes from the start of the encrypted key in the request. The rest looks the same to the server.</figcaption>
     </figure>
     <div class="timing">
       <h3 id="timing-title">Time of the live AltoPIR lookup</h3>
@@ -79,7 +85,7 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
     <div class="compare" id="compare" hidden>
       <h3 id="compare-title">Server time of this lookup</h3>
       <div id="compare-rows"></div>
-      <h3 class="second">Lookups per second, one server</h3>
+      <h3 class="second" data-i18n="qpsTitle">Lookups per second, one server</h3>
       <div id="compare-qps"></div>
       <p class="cap" id="compare-cap"></p>
     </div>
@@ -87,20 +93,20 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
 </main>
 
 <section class="operator" id="operator" hidden>
-  <h2>One server, all day</h2>
+  <h2 data-i18n="opTitle">One server, all day</h2>
   <p class="note" id="op-note"></p>
   <div class="cards" id="op-cards"></div>
 </section>
 
 <footer class="foot">
-  <p>Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned,
+  <p data-i18n-html="foot">Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned,
   <a href="https://github.com/Phishing-Database/Phishing.Database">Phishing.Database</a> (MIT), and
   <a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0).
   Code: <a href="https://github.com/GyuyeongKim/AltoPIR-public">AltoPIR</a>.</p>
 </footer>
 
 </div>
-<script src="replay.js"></script>
-<script src="app.js"></script>
+<script src="replay.js?v=4e43783fbd"></script>
+<script src="app.js?v=bd11edc993"></script>
 </body>
 </html>

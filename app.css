@@ -17,7 +17,8 @@
   --t-encrypt: #aeaeb2;
   --t-decrypt: #8e8e93;
   --hex: #6e6e73;
-  --sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
   --display: var(--sans);
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -58,10 +59,15 @@ a:hover { text-decoration: underline; }
 .dot.ok { background: var(--good); }
 .dot.bad { background: var(--bad); }
 .server[hidden] { display: none; }
-.mast-right { display: flex; align-items: center; gap: 18px; }
+.mast-right { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; }
 .link { appearance: none; background: none; border: 0; padding: 4px 0; font: 500 14px var(--sans); color: var(--accent);
   cursor: pointer; }
 .link:hover { text-decoration: underline; text-underline-offset: 3px; }
+a.link { text-decoration: none; }
+a.link:hover { text-decoration: underline; }
+.ico-link { display: inline-flex; align-items: center; gap: 5px; }
+.ico { width: 15px; height: 15px; flex: none; }
+:lang(ko) { word-break: keep-all; }
 
 /* lede */
 .lede { padding: 44px 0 30px; max-width: 760px; }
