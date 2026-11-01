@@ -19,8 +19,9 @@ static const size_t SW_CHUNK_TILES = 4 * 128 / 16;
 // Batches of up to two clients use the k-vector VNNI kernel, because the block kernel pads clients to groups of four
 // and would spend at least half of its work on padding.
 static const size_t SW_KVEC_MAX = 2;
-// Packing splits the key length into this many parts, so that the four plane slices of U' for one group of 32
-// columns (4 x 32 x K / SW_KH bytes, 512 KB for K = 8192) stay in the L2 cache next to the 256 KB block of sums.
+// Packing splits the key length into this many parts, so that the slices of the four byte planes of the packing
+// matrix for one group of 32 columns (4 x 32 x K / SW_KH bytes, 512 KB for K = 8192) stay in the L2 cache next to
+// the 256 KB block of sums.
 static const size_t SW_KH = 2;
 // Largest ring dimension, which sizes the stack buffer of the tail.
 static const size_t SW_MAX_N = 4096;
@@ -340,7 +341,8 @@ extern "C" void sw_pack_build(int8_t *ub, const uint64_t *const *bold_t, const u
     }
 }
 
-// Packing of the keys y (32-bit values) with U'. The key length K must be a multiple of 64 x SW_KH.
+// Packing multiplies the packing keys y (32-bit values) by the packing matrix. The key length K must be a multiple
+// of 64 x SW_KH.
 static int sw_pack_impl(uint64_t *beta, const int8_t *ub, const void *const *y, size_t B, size_t K, size_t ncols,
                         uint64_t Q, int method, int threads) {
     const size_t Bp = (B + 7) / 8 * 8, R = 4 * Bp, KC = K / 64, CT = ncols / 16;

@@ -58,8 +58,8 @@ answered alone. The engine answers each batch in four steps on its cores.
    when the decoder of the scheme would.
 2. **Query-blocked scan.** Streams the database through AMX once per batch, in the order of the tiles, while one block
    of query limbs at a time stays in the L2 cache.
-3. **Column-group packing.** Streams the public packing matrix once per batch against the keys of all clients, which
-   stay in the L3 cache, and reduces each group of limb products in the L2 cache.
+3. **Column-group packing.** Streams the public packing matrix once per batch against the packing keys of all clients,
+   which stay in the L3 cache, and reduces each group of limb products in the L2 cache.
 4. **Vector tail.** Finishes each response with AVX-512 instructions, straight into one of several response buffers.
 
 Writer threads send the responses from that buffer while the engine answers the next batch. The tiled database, the
@@ -218,8 +218,8 @@ Measure `amx` and `vnni` in separate runs, since the time of one depends on what
 
 Status 0 carries a response, 1 to 3 mark a malformed request, and 9 means that the queue was full. A request is the
 request of the scheme. It holds a flag byte of 0, the two lengths of the packing key, the packing key (two vectors of
-8,192 32-bit values below Q), and one 32-bit query value per record. On a database of N records, a request is
-9 + 4 × (16,384 + N) bytes, and a response is 3.5 bytes per record byte.
+8,192 32-bit values below the prime modulus 2^32 − 12,287), and one 32-bit query value per record. On a database of
+N records, a request is 9 + 4 × (16,384 + N) bytes, and a response is 3.5 bytes per record byte.
 
 ## Reproducing the figures
 
