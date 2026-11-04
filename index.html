@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AltoPIR · Private lookups</title>
-<meta name="description" content="Recorded private lookups with AltoPIR: leaked passwords, unsafe links and Wikipedia passages, answered without the server learning what was asked.">
-<link rel="stylesheet" href="app.css?v=95df315356">
+<meta name="description" content="Recorded private lookups with AltoPIR: leaked passwords, unsafe links, Wikipedia passages and passages for a language model, answered without the server learning what was asked.">
+<link rel="stylesheet" href="app.css?v=0f416ee4c9">
 <script>
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 if (new URLSearchParams(location.search).get("lang") === "ko") document.documentElement.lang = "ko";
@@ -37,6 +37,7 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
 <nav class="tabs" role="tablist" aria-label="Databases" data-i18n-aria="tabsAria">
   <button role="tab" class="tab" data-db="passwords" aria-selected="true" data-i18n="dbPasswords">Leaked passwords</button>
   <button role="tab" class="tab" data-db="urls" aria-selected="false" data-i18n="dbUrls">Unsafe links</button>
+  <button role="tab" class="tab" data-db="rag" aria-selected="false" data-i18n="dbRag">RAG</button>
   <button role="tab" class="tab" data-db="docs" aria-selected="false" data-i18n="dbDocs">Wikipedia</button>
 </nav>
 
@@ -82,7 +83,7 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
     <div class="compare" id="compare" hidden>
       <h3 id="compare-title">Server time of this lookup</h3>
       <div id="compare-rows"></div>
-      <h3 class="second" data-i18n="qpsTitle">Lookups per second, one server</h3>
+      <h3 class="second" data-i18n="qpsTitle">Lookups per second</h3>
       <div id="compare-qps"></div>
       <p class="cap" id="compare-cap"></p>
     </div>
@@ -90,7 +91,7 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
 </main>
 
 <section class="operator" id="operator" hidden>
-  <h2 data-i18n="opTitle">One server, all day</h2>
+  <h2 data-i18n="opTitle">Throughput</h2>
   <p class="note" id="op-note"></p>
   <div class="cards" id="op-cards"></div>
 </section>
@@ -98,12 +99,13 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
 <footer class="foot">
   <p data-i18n-html="foot">Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned,
   <a href="https://github.com/Phishing-Database/Phishing.Database">Phishing.Database</a> (MIT), and
-  <a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0).
-  Code: <a href="https://github.com/GyuyeongKim/AltoPIR-public">AltoPIR</a>.</p>
+  <a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0), Wikipedia passages of
+  <a href="https://github.com/facebookresearch/DPR">DPR</a> and <a href="https://ai.google.com/research/NaturalQuestions">Natural Questions</a> (CC BY-SA 3.0).
+  Built with Llama. Code: <a href="https://github.com/GyuyeongKim/AltoPIR-public">AltoPIR</a>.</p>
 </footer>
 
 </div>
-<script src="replay.js?v=77d13bc4cf"></script>
-<script src="app.js?v=edcab0471e"></script>
+<script src="replay.js?v=a7ed052cd9"></script>
+<script src="app.js?v=809f401c98"></script>
 </body>
 </html>

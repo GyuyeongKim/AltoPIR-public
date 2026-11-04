@@ -16,6 +16,7 @@
   --t-embed: #d1d1d6;
   --t-encrypt: #aeaeb2;
   --t-decrypt: #8e8e93;
+  --t-model: #e8d9b5;
   --hex: #6e6e73;
   --sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
@@ -27,14 +28,14 @@
     --paper: #161618; --surface: #1f1f23; --ink: #ffffff; --ink-2: #c7c7cc; --ink-3: #a1a1a6;
     --rule: #2e2e32; --rule-2: #2a2a2e; --rule-strong: #48484d; --accent: #5ea2ff; --accent-soft: #17243a;
     --on-accent: #0b1a2e; --good: #5cc27e; --bad: #ff7a6e; --t-embed: #3a3a3e; --t-encrypt: #636366;
-    --t-decrypt: #8e8e93; --hex: #a1a1a6;
+    --t-decrypt: #8e8e93; --t-model: #6b5c3a; --hex: #a1a1a6;
   }
 }
 :root[data-theme="dark"] {
   --paper: #161618; --surface: #1f1f23; --ink: #ffffff; --ink-2: #c7c7cc; --ink-3: #a1a1a6;
   --rule: #2e2e32; --rule-2: #2a2a2e; --rule-strong: #48484d; --accent: #5ea2ff; --accent-soft: #17243a;
   --on-accent: #0b1a2e; --good: #5cc27e; --bad: #ff7a6e; --t-embed: #3a3a3e; --t-encrypt: #636366;
-  --t-decrypt: #8e8e93; --hex: #a1a1a6;
+  --t-decrypt: #8e8e93; --t-model: #6b5c3a; --hex: #a1a1a6;
 }
 
 * { box-sizing: border-box; }
@@ -119,6 +120,10 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .verdict.good .head { color: var(--good); }
 .verdict .sub { margin: 0; color: var(--ink-2); }
 .verdict .sub b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.verdict.model { border-color: var(--accent); margin-bottom: 20px; }
+.verdict.model .label { margin: 0 0 6px; font: 600 12px/1 var(--sans); letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--ink-3); }
+.verdict.model .say { margin: 0; font: 500 20px/1.4 var(--display); color: var(--ink); }
 .matches { margin: 12px 0 0; padding: 0; list-style: none; font: 400 14px var(--mono); color: var(--ink-2); }
 .matches li { padding: 3px 0; overflow-wrap: anywhere; }
 .passages { list-style: none; margin: 0; padding: 0; counter-reset: p; }

@@ -54,9 +54,12 @@ const KO = {
   "dbPasswords": "유출 비밀번호",
   "dbUrls": "위험한 링크",
   "dbDocs": "Wikipedia",
+  "dbRag": "RAG",
   "labelPasswords": "비밀번호",
   "labelUrls": "링크",
   "labelDocs": "질문",
+  "labelRag": "질문",
+  "ask": "질문",
   "check": "확인",
   "search": "검색",
   "show": "보기",
@@ -65,9 +68,11 @@ const KO = {
   "linePasswords": "유출 비밀번호 {entries}개 · 버킷 {rows}개(각 {record}) · 총 {db}",
   "lineUrls": "피싱 링크·도메인 {entries}개 · 버킷 {rows}개(각 {record}) · 총 {db}",
   "lineDocs": "문서 {articles}개에서 모은 단락 {passages}개 · 클러스터 {rows}개(각 {record}) · 총 {db}",
+  "lineRag": "Wikipedia 단락 {passages}개 · 클러스터 {rows}개(각 {record}) · 총 {db}",
   "idlePasswords": "비밀번호를 입력하세요. 무작위로 만든 강력한 비밀번호라면 유출 목록에 없을 것입니다.",
   "idleUrls": "링크를 붙여 넣으세요. 링크 자체와 호스트, 상위 도메인 최대 4개를 확인합니다. 요청 6개를 한 번에 묶어 보냅니다.",
   "idleDocs": "질문을 입력하세요. 클라이언트에서 질문을 임베딩하고, 임베딩이 가장 가까운 단락 클러스터를 가져옵니다. 서버는 어떤 클러스터를 가져오는지 알 수 없습니다.",
+  "idleRag": "질문을 입력하세요. 기기에서 질문을 임베딩하고, 가장 가까운 단락 클러스터를 서버가 모르게 가져옵니다. {model}은 그 안에서 질문과 가장 가까운 단락 다섯 개를 읽고 답합니다.",
   "notLoaded": "이 데모에는 해당 데이터베이스를 불러오지 않았습니다.",
   "try": "예시",
   "recorded": "조회 기록",
@@ -102,6 +107,7 @@ const KO = {
   "numbers": "숫자 {n}개",
   "itsEmbedding": "질문 임베딩",
   "bucketsOf": "조회할 버킷(전체 {rows}개)",
+  "clusterOf": "가져올 클러스터(전체 {rows}개)",
   "bytesUp": "{n} bytes",
   "requests": "암호화한 요청 {r}개",
   "requestsFiller": "암호화한 요청 {r}개 ({filler}개는 무작위 요청으로 채워 모든 링크의 요청 수를 맞춤)",
@@ -120,11 +126,21 @@ const KO = {
   "encryptAt": "{here} 암호화",
   "network": "네트워크와 서버",
   "decryptAt": "{here} 복호화",
+  "searchAt": "{here} 가까운 클러스터 찾기",
+  "prefill": "{model}의 단락 읽기",
   "total": "전체 소요 시간",
+  "ttft": "첫 토큰까지",
+  "modelAnswer": "{model}의 답변",
+  "timingTitleRag": "실시간 질문의 첫 토큰까지 걸린 시간",
+  "timingTitleRagReplay": "기록 당시 첫 토큰까지 걸린 시간",
+  "answeredInRag": "AltoPIR로 첫 토큰까지 <b>{took}</b> 걸렸습니다.",
+  "shownIdleRag": "이 질문의 {scheme} 처리 시간에 맞춰 <b>{replayed}</b> 후에 답을 표시했습니다. AltoPIR로는 첫 토큰까지 <b>{took}</b> 걸렸습니다.",
+  "shownBusyOursRag": "AltoPIR로 동시 질문 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 답을 표시했습니다. 이 질문 하나만 처리했을 때는 첫 토큰까지 <b>{took}</b> 걸렸습니다.",
+  "shownBusyRag": "{scheme} 방식으로 동시 질문 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 답을 표시했습니다. AltoPIR로는 첫 토큰까지 <b>{oursBusy}</b> 걸립니다.",
   "compareBusy": "조회 {n}건 동시 요청 시 서버 처리 시간",
   "compareIdle": "이번 조회만 요청했을 때 서버 처리 시간",
   "compareTitle": "이번 조회의 서버 처리 시간",
-  "qpsTitle": "서버 한 대의 초당 조회 수",
+  "qpsTitle": "초당 조회 수",
   "oneCore": "코어 하나",
   "answering": "{scheme} 처리 중",
   "waitBusy": "조회 {n}건 동시 처리에 총 {time} 소요 ({where}에서 측정한 throughput 기준)",
@@ -134,15 +150,15 @@ const KO = {
   "shownBusyOurs": "AltoPIR로 동시 조회 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 결과를 표시했습니다. 이번 조회 한 건만 처리했을 때는 <b>{took}</b> 걸렸습니다.",
   "shownBusy": "{scheme} 방식으로 동시 조회 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 결과를 표시했습니다. AltoPIR로 모두 처리하는 데는 <b>{oursBusy}</b> 걸립니다.",
   "noAnswer": "데모 클라이언트에서 응답이 오지 않았습니다: ",
-  "opTitle": "서버 한 대의 하루 처리량",
+  "opTitle": "처리량",
   "perSecond": "초당 조회 수",
   "perDay": "하루 조회 수",
   "alone": "조회 한 건만 처리할 때",
   "database": "데이터베이스 {size}",
   "fastest": "가장 빠른 기존 방식: 초당 {qps}회 ({name}, {size})",
   "fastestNoSize": "가장 빠른 기존 방식: 초당 {qps}회 ({name})",
-  "foot": "데이터: Have I Been Pwned의 <a href=\"https://haveibeenpwned.com/Passwords\">Pwned Passwords</a>, <a href=\"https://github.com/Phishing-Database/Phishing.Database\">Phishing.Database</a> (MIT), <a href=\"https://simple.wikipedia.org/\">Simple English Wikipedia</a> (CC BY-SA 4.0). 코드: <a href=\"https://github.com/GyuyeongKim/AltoPIR-public\">AltoPIR</a>.",
-  "rec.lede": "2026년 10월 28일에 기록한 조회를 재생하는 페이지입니다. 데모 클라이언트는 각 입력을 해시하거나 임베딩한 뒤 암호화했습니다. AltoPIR 서버는 데이터베이스의 모든 레코드를 사용해 답을 계산했고, 클라이언트만 답을 읽을 수 있었습니다. 각 결과를 보여 주기까지 걸리는 시간도 당시 서버에서 측정한 처리 속도에 맞췄습니다. 이 페이지에서는 서버로 아무것도 보내지 않습니다.",
+  "foot": "데이터: Have I Been Pwned의 <a href=\"https://haveibeenpwned.com/Passwords\">Pwned Passwords</a>, <a href=\"https://github.com/Phishing-Database/Phishing.Database\">Phishing.Database</a> (MIT), <a href=\"https://simple.wikipedia.org/\">Simple English Wikipedia</a> (CC BY-SA 4.0), <a href=\"https://github.com/facebookresearch/DPR\">DPR</a>의 Wikipedia 단락과 <a href=\"https://ai.google.com/research/NaturalQuestions\">Natural Questions</a> (CC BY-SA 3.0). Built with Llama. 코드: <a href=\"https://github.com/GyuyeongKim/AltoPIR-public\">AltoPIR</a>.",
+  "rec.lede": "미리 기록한 조회를 재생하는 페이지입니다. 데모 클라이언트는 각 입력을 해시하거나 임베딩한 뒤 암호화했습니다. AltoPIR 서버는 데이터베이스의 모든 레코드를 사용해 답을 계산했고, 클라이언트만 답을 읽을 수 있었습니다. 각 결과를 보여 주기까지 걸리는 시간도 당시 서버에서 측정한 처리 속도에 맞췄습니다. 이 페이지에서는 서버로 아무것도 보내지 않습니다.",
   "rec.example.random": "무작위 비밀번호",
   "rec.example.phishingLink": "피싱 링크",
   "rec.example.phishingDomain": "피싱 도메인",
@@ -156,6 +172,7 @@ const KO = {
   "rec.baselineNote.docs": "서버 처리 시간은 모두 이 서버에서 측정했습니다. AltoPIR 측정에는 현재 데이터베이스를 사용했습니다. 나머지 방식은 공식 구현으로 1 GB 데이터베이스에서 측정했습니다. 레코드 크기는 32 KB로, 현재 데이터베이스의 128 KB보다 작습니다.",
   "rec.baselineNote.passwords": "서버 처리 시간은 모두 이 서버에서 측정했습니다. AltoPIR 측정에는 현재 데이터베이스를 사용했습니다. 나머지 방식은 공식 구현으로 8 GB 데이터베이스에서 측정했으며, 레코드 크기는 32 KB입니다. 현재 데이터베이스는 11.25 GB이므로, 나머지 방식으로 조회하면 측정값보다 오래 걸릴 것입니다.",
   "rec.baselineNote.urls": "서버 처리 시간은 모두 이 서버에서 측정했습니다. AltoPIR 측정에는 현재 데이터베이스를 사용했습니다. 나머지 방식은 공식 구현으로 64 MB 데이터베이스에서 측정했으며, 레코드 크기는 32 KB입니다.",
+  "rec.baselineNote.rag": "모든 방식의 서버 처리 시간은 Xeon Silver 4514Y 서버의 코어 16개로, 이 데이터베이스와 같은 모양의 데이터베이스에서 측정했습니다. Llama 3.1 8B는 NVIDIA A30 GPU에서 실행했습니다.",
   "rec.sizeNote.same": "같은 크기에서 측정",
   "rec.sizeNote.at8gb": "8 GB에서 측정",
   "rec.operatorNote": "Xeon Silver 4514Y 서버에서 연산에 코어 15개를 쓰고, 조회를 최대 128개씩 묶어 측정했습니다. AltoPIR 논문에서는 1 GB~64 GB 데이터베이스로 성능을 비교했습니다. 같은 코어를 사용했을 때 AltoPIR의 쿼리 처리량은 힌트 없이 동작하는 기존 방식 중 가장 빠른 방식의 24~50배였습니다.",
@@ -163,7 +180,7 @@ const KO = {
 };
 // text that comes with the recording, by its English original -> its key in KO
 const KO_RECORDED = {
-  "This page replays lookups recorded on 28 October 2026. A demo client hashed or embedded each input and encrypted it. An AltoPIR server computed over every record of its database, and only the client could read the answer. Each answer appears after the time it takes at the speeds measured on that server, and nothing you do here reaches a server.": "rec.lede",
+  "This page replays recorded lookups. A demo client hashed or embedded each input and encrypted it. An AltoPIR server computed over every record of its database, and only the client could read the answer. Each answer appears after the time it takes at the speeds measured on that server, and nothing you do here reaches a server.": "rec.lede",
   "a random one": "rec.example.random",
   "a phishing link": "rec.example.phishingLink",
   "a phishing domain": "rec.example.phishingDomain",
@@ -177,6 +194,7 @@ const KO_RECORDED = {
   "Server time measured on this server: AltoPIR on this database; the others with their official implementations on a 1 GB database with their 32 KB records, smaller than the 128 KB records here.": "rec.baselineNote.docs",
   "Server time measured on this server: AltoPIR on this database; the others with their official implementations at 8 GB and 32 KB records (this database is 11.25 GB, so they would take longer).": "rec.baselineNote.passwords",
   "Server time measured on this server: AltoPIR on this database; the others with their official implementations on a 64 MB database with their 32 KB records.": "rec.baselineNote.urls",
+  "Server time of every scheme measured on 16 cores of a Xeon Silver 4514Y server, on a database of this shape. Llama 3.1 8B ran on an NVIDIA A30 GPU.": "rec.baselineNote.rag",
   "same size": "rec.sizeNote.same",
   "measured at 8 GB": "rec.sizeNote.at8gb",
   "Measured on a Xeon Silver 4514Y server with 15 engine cores and batches of up to 128 lookups. In the AltoPIR paper, the fastest existing hintless scheme answers 24 to 50 times fewer queries on the same cores, for databases of 1 GB to 64 GB.": "rec.operatorNote",
@@ -196,15 +214,19 @@ const I18N = {
     h1: "Ask a database a question without telling it what you asked.",
     lede: "Your input never leaves this machine. It is hashed and encrypted here, the server computes over every record of its " +
           "database, and the answer comes back in a form that only this machine can read.",
-    tabsAria: "Databases", dbPasswords: "Leaked passwords", dbUrls: "Unsafe links", dbDocs: "Wikipedia",
-    labelPasswords: "Password", labelUrls: "Link", labelDocs: "Question", check: "Check", search: "Search",
+    tabsAria: "Databases", dbPasswords: "Leaked passwords", dbUrls: "Unsafe links", dbDocs: "Wikipedia", dbRag: "RAG",
+    labelPasswords: "Password", labelUrls: "Link", labelDocs: "Question", labelRag: "Question", check: "Check", search: "Search",
+    ask: "Ask",
     show: "Show", hide: "Hide", revealAria: "Show the password",
     linePasswords: (m) => `${words(m.entries)} leaked passwords, ${int(m.rows)} buckets of ${bytes(m.record_bytes)}, ${bytes(m.db_bytes)} in all`,
     lineUrls: (m) => `${words(m.entries)} phishing links and domains, ${int(m.rows)} buckets of ${bytes(m.record_bytes)}, ${bytes(m.db_bytes)} in all`,
     lineDocs: (m) => `${words(m.passages)} passages from ${int(m.articles)} articles, ${int(m.rows)} clusters of ${bytes(m.record_bytes)}, ${bytes(m.db_bytes)} in all`,
+    lineRag: (m) => `${words(m.passages)} Wikipedia passages, ${int(m.rows)} clusters of ${bytes(m.record_bytes)}, ${bytes(m.db_bytes)} in all`,
     idlePasswords: "Type a password. A strong random one should not appear among the leaked passwords.",
     idleUrls: "Paste a link. The link, its host and up to four parent domains are checked together, in one batch of six requests.",
     idleDocs: "Ask a question. It is embedded here, and the nearest clusters of passages are fetched without the server learning which.",
+    idleRag: (v) => "Ask a question. It is embedded here, and the nearest cluster of passages is fetched without the server learning which. " +
+                    `${v.model} then answers from the five passages of the cluster closest to the question.`,
     notLoaded: "This database is not loaded on this demo.",
     try: "Try", recorded: "Recorded", pickBelow: "Pick a recorded lookup below", pickAbove: "Pick one of the recorded lookups above.",
     answerWith: "Answer with", oneCoreOnly: "Measured on one core only, so it has no time for many lookups at once",
@@ -224,6 +246,7 @@ const I18N = {
     yourPassword: "your password", itsSha1: "its SHA-1", yourLink: "your link", yourQuestion: "your question",
     numbers: (v) => `${v.n} numbers`, itsEmbedding: "its embedding",
     bucketsOf: (v) => `${v.k > 1 ? "buckets" : "bucket"} of ${int(v.rows)}`,
+    clusterOf: (v) => `cluster of ${int(v.rows)}`,
     bytesUp: (v) => `${int(v.n)} bytes`,
     requests: (v) => `${v.r} encrypted ${v.r > 1 ? "requests" : "request"}` +
                      (v.filler > 0 ? `, ${v.filler} of them random, so every link sends ${v.r}` : ""),
@@ -234,8 +257,15 @@ const I18N = {
     here: "here", hereReplay: "on the client", machine: "this machine", machineReplay: "the client",
     embedAt: (v) => `Embed the question ${v.here}`, encryptAt: (v) => `Encrypt ${v.here}`, network: "Network and server",
     decryptAt: (v) => `Decrypt ${v.here}`, total: "Total",
+    searchAt: (v) => `Find the nearest cluster ${v.here}`, prefill: (v) => `${v.model} reads the passages`,
+    ttft: "First token", modelAnswer: (v) => `Answer of ${v.model}`,
+    timingTitleRag: "Time to the first token of the live question", timingTitleRagReplay: "Time to the first token of the recorded question",
+    answeredInRag: (v) => `First token after <b>${ms(v.took)}</b> with AltoPIR.`,
+    shownIdleRag: (v) => `Shown after <b>${ms(v.replayed)}</b>, the time of this question with ${v.scheme}. With AltoPIR the first token came after <b>${ms(v.took)}</b>.`,
+    shownBusyOursRag: (v) => `Shown after <b>${ms(v.replayed)}</b>, when AltoPIR answers ${v.n} questions that arrive at once. This question alone had its first token after <b>${ms(v.took)}</b>.`,
+    shownBusyRag: (v) => `Shown after <b>${ms(v.replayed)}</b>, when ${v.scheme} answers ${v.n} questions that arrive at once. With AltoPIR the first token comes after <b>${ms(v.oursBusy)}</b>.`,
     compareBusy: (v) => `Server time for ${v.n} lookups at once`, compareIdle: "Server time of this lookup alone",
-    compareTitle: "Server time of this lookup", qpsTitle: "Lookups per second, one server", oneCore: "one core",
+    compareTitle: "Server time of this lookup", qpsTitle: "Lookups per second", oneCore: "one core",
     answering: (v) => `${v.scheme} is answering`,
     waitBusy: (v) => `${ms(v.target)} in all, for ${v.n} lookups at once at the throughput measured on ${v.where}`,
     waitIdle: (v) => `${ms(v.target)} in all, at the speed measured on ${v.where}`,
@@ -244,13 +274,15 @@ const I18N = {
     shownBusyOurs: (v) => `Shown after <b>${ms(v.replayed)}</b>, when AltoPIR answers ${v.n} lookups that arrive at once. This lookup alone took <b>${ms(v.took)}</b>.`,
     shownBusy: (v) => `Shown after <b>${ms(v.replayed)}</b>, when ${v.scheme} answers ${v.n} lookups that arrive at once. AltoPIR answers them in <b>${ms(v.oursBusy)}</b>.`,
     noAnswer: "The demo client did not answer: ",
-    opTitle: "One server, all day", perSecond: "Lookups per second", perDay: "Lookups per day", alone: "One lookup alone",
+    opTitle: "Throughput", perSecond: "Lookups per second", perDay: "Lookups per day", alone: "One lookup alone",
     count: (v) => words(v.n), database: (v) => `${bytes(v.n)} database`,
     fastest: (v) => `Fastest existing scheme: ${v.qps} lookups per second (${v.name}${v.size ? ", " + v.size : ""}).`,
     foot: 'Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned, ' +
           '<a href="https://github.com/Phishing-Database/Phishing.Database">Phishing.Database</a> (MIT), and ' +
-          '<a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0). ' +
-          'Code: <a href="https://github.com/GyuyeongKim/AltoPIR-public">AltoPIR</a>.',
+          '<a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0), Wikipedia passages of ' +
+          '<a href="https://github.com/facebookresearch/DPR">DPR</a> and ' +
+          '<a href="https://ai.google.com/research/NaturalQuestions">Natural Questions</a> (CC BY-SA 3.0). ' +
+          'Built with Llama. Code: <a href="https://github.com/GyuyeongKim/AltoPIR-public">AltoPIR</a>.',
   },
   ko: {
     ...Object.fromEntries(Object.entries(KO).filter(([k, s]) => !k.startsWith("rec.") && !s.includes("{"))),
@@ -259,6 +291,13 @@ const I18N = {
     lineUrls: (m) => fill(KO.lineUrls, { entries: wordsKo(m.entries), rows: int(m.rows), record: bytes(m.record_bytes), db: bytes(m.db_bytes) }),
     lineDocs: (m) => fill(KO.lineDocs, { passages: wordsKo(m.passages), articles: int(m.articles), rows: int(m.rows),
                                          record: bytes(m.record_bytes), db: bytes(m.db_bytes) }),
+    lineRag: (m) => fill(KO.lineRag, { passages: wordsKo(m.passages), rows: int(m.rows), record: bytes(m.record_bytes), db: bytes(m.db_bytes) }),
+    clusterOf: (v) => fill(KO.clusterOf, { rows: int(v.rows) }), searchAt: (v) => fill(KO.searchAt, v),
+    idleRag: (v) => fill(KO.idleRag, v), prefill: (v) => fill(KO.prefill, v), modelAnswer: (v) => fill(KO.modelAnswer, v),
+    answeredInRag: (v) => fill(KO.answeredInRag, { took: ms(v.took) }),
+    shownIdleRag: (v) => fill(KO.shownIdleRag, { replayed: ms(v.replayed), scheme: v.scheme, took: ms(v.took) }),
+    shownBusyOursRag: (v) => fill(KO.shownBusyOursRag, { replayed: ms(v.replayed), n: v.n, took: ms(v.took) }),
+    shownBusyRag: (v) => fill(KO.shownBusyRag, { replayed: ms(v.replayed), scheme: v.scheme, n: v.n, oursBusy: ms(v.oursBusy) }),
     busy: (v) => fill(KO.busy, v), whyBusy: (v) => fill(KO.whyBusy, v),
     whyIdle: (v) => fill(v.replay ? KO.whyIdleReplay : KO.whyIdleLive, v),
     seen: (v) => fill(KO.seen, { n: wordsKo(v.n) }), noneMatch: (v) => fill(KO.noneMatch, { n: wordsKo(v.n) }),
@@ -308,6 +347,10 @@ const DBS = {
                ["What does the liver do?", "What does the liver do?"]],
     line: "lineDocs", idle: "idleDocs", name: "dbDocs",
   },
+  rag: {
+    label: "labelRag", type: "text", button: "ask", reveal: false, examples: [],
+    line: "lineRag", idle: "idleRag", name: "dbRag",
+  },
 };
 
 let info = { databases: {}, operator: {} };
@@ -325,6 +368,9 @@ const sleep = (t) => new Promise((r) => setTimeout(r, t));
 function baselines(db) { return ((info.operator || {}).baselines || {})[db]; }
 // server time of k requests from a scheme's measured single-query time and throughput on this server
 function estMs(s, k) { return s.qps ? Math.max(s.single_ms, 1000 * k / s.qps) : k * s.single_ms; }
+// the client's own time of a lookup (with RAG, up to the model's first token) and the whole time it took
+function clientMs(tm) { return tm.prepare_ms + tm.decrypt_ms + (tm.embed_ms || 0) + (tm.search_ms || 0) + (tm.prefill_ms || 0); }
+function tookMs(tm) { return clientMs(tm) + tm.round_trip_ms; }
 // where the client work happens and where the speeds were measured (a replay: the recording client and server)
 const here = () => t(info.replay ? "hereReplay" : "here");
 const machine = () => t(info.replay ? "machineReplay" : "machine");
@@ -422,19 +468,22 @@ function renderAnswer(db, d) {
     return v;
   }
   const list = el("ol", { class: "passages" });
+  const wiki = db === "rag" ? "https://en.wikipedia.org/wiki/" : "https://simple.wikipedia.org/wiki/";
   for (const p of d.passages) {
-    const href = "https://simple.wikipedia.org/wiki/" + encodeURIComponent(p.title.replace(/ /g, "_"));
-    list.append(el("li", {}, el("p", { class: "t" }, el("a", { href, target: "_blank", rel: "noopener" }, p.title)),
-                   el("p", { class: "x" }, p.text)));
+    const title = p.title.normalize("NFC"), href = wiki + encodeURIComponent(title.replace(/ /g, "_"));
+    list.append(el("li", {}, el("p", { class: "t" }, el("a", { href, target: "_blank", rel: "noopener" }, title)),
+                   el("p", { class: "x" }, p.text.normalize("NFC"))));
   }
-  return list;
+  if (db !== "rag") return list;
+  return el("div", {}, el("div", { class: "verdict model" }, el("p", { class: "label" }, t("modelAnswer", m)),
+                          el("p", { class: "say" }, d.answer)), list);
 }
 
 // the answer box: the tab's hint, the wait for the chosen scheme, the answer with its note, or an error
 function renderView() {
   const v = view, box = $("answer");
   if (v.kind === "idle") {
-    box.replaceChildren(el("p", { class: "placeholder" }, t(info.replay ? "pickAbove" : DBS[current].idle)));
+    box.replaceChildren(el("p", { class: "placeholder" }, t(info.replay ? "pickAbove" : DBS[current].idle, info.databases[current])));
   } else if (v.kind === "wait") {   // the bar keeps running; only its text changes
     v.head.textContent = t("answering", v);
     v.small.textContent = t(v.many ? "waitBusy" : "waitIdle", { ...v, where: where() });
@@ -445,13 +494,14 @@ function renderView() {
     box.replaceChildren(renderAnswer(db, d));
     // the note goes above a list of passages, which can run below the fold, and under a short verdict
     if (d.wire && !d.error) {
-      const tm = d.wire.time, took = tm.prepare_ms + tm.round_trip_ms + tm.decrypt_ms + (tm.embed_ms || 0);
+      const took = tookMs(d.wire.time), rag = db === "rag" ? "Rag" : "";
       const vars = { ...v, took, n: CROWD };
-      const note = v.replayed == null ? t("answeredIn", vars)
-        : !v.many ? t("shownIdle", vars)
-        : v.scheme === "AltoPIR" ? t("shownBusyOurs", vars)
-        : t("shownBusy", vars);
-      box[db === "docs" ? "prepend" : "append"](el("p", { class: "replayed" + (db === "docs" ? " top" : ""), html: note }));
+      const note = v.replayed == null ? t("answeredIn" + rag, vars)
+        : !v.many ? t("shownIdle" + rag, vars)
+        : v.scheme === "AltoPIR" ? t("shownBusyOurs" + rag, vars)
+        : t("shownBusy" + rag, vars);
+      const top = db === "docs" || db === "rag";
+      box[top ? "prepend" : "append"](el("p", { class: "replayed" + (top ? " top" : ""), html: note }));
     }
     if (d.wire) renderWire(db, v.input, d, last && last.d === d ? last.sel : v.scheme); else $("wire").hidden = true;
   }
@@ -474,24 +524,31 @@ function renderWire(db, input, d, chosen) {
     item(stayed, t("numbers", { n: m.dim }), t("itsEmbedding"), "n");
   }
   const buckets = w.local.map((x) => int(x.bucket)).join(", ");
-  item(stayed, buckets, t("bucketsOf", { k: w.local.length, rows: w.rows }), "n");
+  item(stayed, buckets, t(db === "rag" ? "clusterOf" : "bucketsOf", { k: w.local.length, rows: w.rows }), "n");
   item(sent, t("bytesUp", { n: w.up_bytes }), t("requests", { r: w.requests, filler: w.requests - w.local.length }), "n");
   item(sent, bytes(w.rows * w.record_bytes), t("readInFull", { r: w.requests }), "n");
   item(sent, t("bytesBack", { n: w.down_bytes }), t("readableOnly", { machine: machine() }), "n");
 
-  $("hex").textContent = w.preview_hex.match(/.{1,8}/g).join(" ").match(/.{1,36}/g).join("\n");
+  // the recorded RAG questions carry no request bytes, so their panel has no preview
+  $("hex").closest("figure").hidden = !w.preview_hex;
+  if (w.preview_hex) $("hex").textContent = w.preview_hex.match(/.{1,8}/g).join(" ").match(/.{1,36}/g).join("\n");
+  const replay = info.replay;
+  $("timing-title").textContent = t(db === "rag" ? (replay ? "timingTitleRagReplay" : "timingTitleRag")
+                                                 : (replay ? "timingTitleReplay" : "timingTitle"));
 
   const tm = w.time, parts = [];
   if (tm.embed_ms != null) parts.push([t("embedAt", { here: here() }), tm.embed_ms, "var(--t-embed)"]);
+  if (tm.search_ms != null) parts.push([t("searchAt", { here: here() }), tm.search_ms, "var(--t-embed)"]);
   parts.push([t("encryptAt", { here: here() }), tm.prepare_ms, "var(--t-encrypt)"]);
   parts.push([t("network"), tm.round_trip_ms, "var(--accent)"]);
   parts.push([t("decryptAt", { here: here() }), tm.decrypt_ms, "var(--t-decrypt)"]);
+  if (tm.prefill_ms != null) parts.push([t("prefill", m), tm.prefill_ms, "var(--t-model)"]);
   const total = parts.reduce((s, p) => s + p[1], 0);
   $("bar").replaceChildren(...parts.map(([n, v, c]) => el("span", { style: `width:${(100 * v / total).toFixed(2)}%;background:${c}`, title: n })));
   const lg = $("legend");
   lg.replaceChildren();
   for (const [n, v, c] of parts) lg.append(el("dt", { style: `background:${c}` }), el("dd", {}, n), el("dd", { class: "v" }, ms(v)));
-  lg.append(el("dt", { class: "total" }), el("dd", { class: "total" }, t("total")), el("dd", { class: "v total" }, ms(total)));
+  lg.append(el("dt", { class: "total" }), el("dd", { class: "total" }, t(db === "rag" ? "ttft" : "total")), el("dd", { class: "v total" }, ms(total)));
   last = { db, d, input };
   renderCompare(db, d, chosen);
   $("wire").hidden = false;
@@ -546,7 +603,7 @@ async function submit(ev) {
     let replayed = null, oursBusy = null;
     if (base && (many || chosen !== "AltoPIR") && (!many || base.qps)) {
       // the chosen scheme's measured speed: same client work and network, its server time for n lookups at once
-      const tm = d.wire.time, k = d.wire.requests, client = tm.prepare_ms + tm.decrypt_ms + (tm.embed_ms || 0);
+      const tm = d.wire.time, k = d.wire.requests, client = clientMs(tm);
       const network = ours ? Math.max(0, tm.round_trip_ms - estMs(ours, k)) : 0;
       const target = client + network + estMs(base, k * n), left = target - (performance.now() - t0);
       replayed = target;
@@ -581,6 +638,7 @@ function renderOperator() {
   if (!Object.keys(dbs).length) { $("operator").hidden = true; return; }
   $("operator").hidden = false;
   $("op-note").textContent = tx(op.note || "");
+  $("op-note").hidden = !op.note;
   const cards = $("op-cards");
   cards.replaceChildren();
   for (const db of ["passwords", "urls", "docs"]) {
