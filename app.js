@@ -37,7 +37,8 @@ function randomPassword() {
 }
 
 // Korean copy: demo/i18n/strings_before_codex.json rewritten by Codex with demo/i18n/codex_ko_prompt.md, applied verbatim
-// from demo/i18n/ko_codex.json. {name} marks a value the page fills in.
+// from demo/i18n/ko_codex.json; the race and throughput strings from demo/i18n/race_strings_codex.json, also verbatim.
+// {name} marks a value the page fills in.
 const KO = {
   "title": "AltoPIR · 검색 내용은 비공개",
   "tag": "CPU 서버에서 검색 내용을 숨기고 조회하기",
@@ -78,16 +79,20 @@ const KO = {
   "recorded": "조회 기록",
   "pickBelow": "아래에서 조회 기록 선택",
   "pickAbove": "위에서 조회 기록을 하나 선택하세요.",
-  "answerWith": "조회 방식",
   "oneCoreOnly": "코어 하나에서만 측정한 결과라 여러 조회를 동시에 처리할 때 걸리는 시간은 제공하지 않습니다.",
   "server": "서버 부하",
   "busy": "바쁨 · 조회 {n}건 동시 요청",
   "idle": "한가함 · 이번 조회만 요청",
   "thisServer": "이 서버",
   "thisCpu": "이 CPU",
-  "whyBusy": "이번과 같은 조회 {n}건이 한꺼번에 들어옵니다. 각 방식은 {where}에서 측정한 throughput으로 모든 조회를 처리합니다. 마지막 조회까지 끝나면 결과를 보여 줍니다.",
-  "whyIdleReplay": "조회 결과는 같은 데이터베이스에서 가져옵니다. {scheme} 공식 구현을 {where}에서 실행해 측정한 시간만큼 기다린 뒤 결과를 보여 줍니다.",
-  "whyIdleLive": "조회 결과는 같은 데이터베이스에서 가져옵니다. {scheme} 공식 구현을 {where}에서 실행해 측정한 시간만큼 기다린 뒤 결과를 보여 줍니다.",
+  "whyBusy": "이번과 같은 조회 {n}건이 한꺼번에 들어옵니다. 각 방식은 {where}에서 측정한 throughput으로 모든 조회를 처리합니다. 마지막 조회까지 끝나면 막대가 가득 찹니다.",
+  "whyIdleRace": "서버에는 이번 조회만 들어옵니다. 기존 방식마다 {where}에서 공식 구현으로 측정한 서버 처리 시간에 AltoPIR 조회 때 걸린 클라이언트·네트워크 시간을 더합니다.",
+  "boardTitle": "가장 빠른 기존 방식과 throughput 비교",
+  "times": "{x}배",
+  "moreThan": "{name}보다 초당 조회 수가 많음",
+  "raceTitle": "답을 받기까지 걸린 시간",
+  "raceTitleRag": "첫 토큰까지 걸린 시간",
+  "slower": "{r}배 오래 걸림",
   "found": "유출 목록에서 발견",
   "seen": "유출 데이터에 약 <b>{n}</b>번 등장합니다.",
   "notFound": "유출 목록에 없음",
@@ -134,29 +139,11 @@ const KO = {
   "timingTitleRag": "실시간 질문의 첫 토큰까지 걸린 시간",
   "timingTitleRagReplay": "기록 당시 첫 토큰까지 걸린 시간",
   "answeredInRag": "AltoPIR로 첫 토큰까지 <b>{took}</b> 걸렸습니다.",
-  "shownIdleRag": "이 질문의 {scheme} 처리 시간에 맞춰 <b>{replayed}</b> 후에 답을 표시했습니다. AltoPIR로는 첫 토큰까지 <b>{took}</b> 걸렸습니다.",
   "shownBusyOursRag": "AltoPIR로 동시 질문 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 답을 표시했습니다. 이 질문 하나만 처리했을 때는 첫 토큰까지 <b>{took}</b> 걸렸습니다.",
-  "shownBusyRag": "{scheme} 방식으로 동시 질문 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 답을 표시했습니다. AltoPIR로는 첫 토큰까지 <b>{oursBusy}</b> 걸립니다.",
-  "compareBusy": "조회 {n}건 동시 요청 시 서버 처리 시간",
-  "compareIdle": "이번 조회만 요청했을 때 서버 처리 시간",
-  "compareTitle": "이번 조회의 서버 처리 시간",
-  "qpsTitle": "초당 조회 수",
   "oneCore": "코어 하나",
-  "answering": "{scheme} 처리 중",
-  "waitBusy": "조회 {n}건 동시 처리에 총 {time} 소요 ({where}에서 측정한 throughput 기준)",
-  "waitIdle": "총 {time} 소요 ({where}에서 측정한 속도 기준)",
   "answeredIn": "AltoPIR로 답을 받는 데 <b>{took}</b> 걸렸습니다.",
-  "shownIdle": "이번 조회의 {scheme} 처리 시간에 맞춰 <b>{replayed}</b> 후에 결과를 표시했습니다. AltoPIR로는 <b>{took}</b> 걸렸습니다.",
   "shownBusyOurs": "AltoPIR로 동시 조회 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 결과를 표시했습니다. 이번 조회 한 건만 처리했을 때는 <b>{took}</b> 걸렸습니다.",
-  "shownBusy": "{scheme} 방식으로 동시 조회 {n}건을 모두 처리하는 시간에 맞춰 <b>{replayed}</b> 후에 결과를 표시했습니다. AltoPIR로 모두 처리하는 데는 <b>{oursBusy}</b> 걸립니다.",
   "noAnswer": "데모 클라이언트에서 응답이 오지 않았습니다: ",
-  "opTitle": "처리량",
-  "perSecond": "초당 조회 수",
-  "perDay": "하루 조회 수",
-  "alone": "조회 한 건만 처리할 때",
-  "database": "데이터베이스 {size}",
-  "fastest": "가장 빠른 기존 방식: 초당 {qps}회 ({name}, {size})",
-  "fastestNoSize": "가장 빠른 기존 방식: 초당 {qps}회 ({name})",
   "foot": "데이터: Have I Been Pwned의 <a href=\"https://haveibeenpwned.com/Passwords\">Pwned Passwords</a>, <a href=\"https://github.com/Phishing-Database/Phishing.Database\">Phishing.Database</a> (MIT), <a href=\"https://simple.wikipedia.org/\">Simple English Wikipedia</a> (CC BY-SA 4.0), <a href=\"https://github.com/facebookresearch/DPR\">DPR</a>의 Wikipedia 단락과 <a href=\"https://ai.google.com/research/NaturalQuestions\">Natural Questions</a> (CC BY-SA 3.0). Built with Llama. 코드: <a href=\"https://github.com/GyuyeongKim/AltoPIR-public\">AltoPIR</a>.",
   "rec.lede": "미리 기록한 조회를 재생하는 페이지입니다. 데모 클라이언트는 각 입력을 해시하거나 임베딩한 뒤 암호화했습니다. AltoPIR 서버는 데이터베이스의 모든 레코드를 사용해 답을 계산했고, 클라이언트만 답을 읽을 수 있었습니다. 각 결과를 보여 주기까지 걸리는 시간도 당시 서버에서 측정한 처리 속도에 맞췄습니다. 이 페이지에서는 서버로 아무것도 보내지 않습니다.",
   "rec.example.random": "무작위 비밀번호",
@@ -229,11 +216,14 @@ const I18N = {
                     `${v.model} then answers from the five passages of the cluster closest to the question.`,
     notLoaded: "This database is not loaded on this demo.",
     try: "Try", recorded: "Recorded", pickBelow: "Pick a recorded lookup below", pickAbove: "Pick one of the recorded lookups above.",
-    answerWith: "Answer with", oneCoreOnly: "Measured on one core only, so it has no time for many lookups at once",
+    oneCoreOnly: "Measured on one core only, so it has no time for many lookups at once",
     server: "Server", busy: (v) => `Busy, ${v.n} lookups at once`, idle: "Idle, this lookup alone",
     thisServer: "this server", thisCpu: "this CPU",
-    whyBusy: (v) => `${v.n} lookups like this one arrive together. Each scheme answers all of them at the throughput measured on ${v.where}, and the answer appears when the last one is done.`,
-    whyIdle: (v) => `The answer comes from the same database; it appears after the time ${v.scheme} needs on ${v.where}, ${v.replay ? "which we measured" : "measured"} with its official implementation.`,
+    boardTitle: "Throughput against the fastest existing scheme",
+    times: (v) => `${v.x}×`, moreThan: (v) => `more lookups per second than ${v.name}`,
+    raceTitle: "Time to the answer", raceTitleRag: "Time to the first token", slower: (v) => `${v.r}× slower`,
+    whyBusy: (v) => `${v.n} lookups like this one arrive together. Each scheme answers all of them at the throughput measured on ${v.where}, and its bar ends when the last one is done.`,
+    whyIdleRace: (v) => `Only this lookup reaches the server. Each existing scheme takes the server time of its official implementation on ${v.where}, with the client and network time of the AltoPIR lookup.`,
     found: "Found in leaked passwords",
     seen: (v) => `Seen about <b>${words(v.n)}</b> ${v.n === 1 ? "time" : "times"} in breach data.`,
     notFound: "Not among the leaked passwords",
@@ -261,22 +251,11 @@ const I18N = {
     ttft: "First token", modelAnswer: (v) => `Answer of ${v.model}`,
     timingTitleRag: "Time to the first token of the live question", timingTitleRagReplay: "Time to the first token of the recorded question",
     answeredInRag: (v) => `First token after <b>${ms(v.took)}</b> with AltoPIR.`,
-    shownIdleRag: (v) => `Shown after <b>${ms(v.replayed)}</b>, the time of this question with ${v.scheme}. With AltoPIR the first token came after <b>${ms(v.took)}</b>.`,
     shownBusyOursRag: (v) => `Shown after <b>${ms(v.replayed)}</b>, when AltoPIR answers ${v.n} questions that arrive at once. This question alone had its first token after <b>${ms(v.took)}</b>.`,
-    shownBusyRag: (v) => `Shown after <b>${ms(v.replayed)}</b>, when ${v.scheme} answers ${v.n} questions that arrive at once. With AltoPIR the first token comes after <b>${ms(v.oursBusy)}</b>.`,
-    compareBusy: (v) => `Server time for ${v.n} lookups at once`, compareIdle: "Server time of this lookup alone",
-    compareTitle: "Server time of this lookup", qpsTitle: "Lookups per second", oneCore: "one core",
-    answering: (v) => `${v.scheme} is answering`,
-    waitBusy: (v) => `${ms(v.target)} in all, for ${v.n} lookups at once at the throughput measured on ${v.where}`,
-    waitIdle: (v) => `${ms(v.target)} in all, at the speed measured on ${v.where}`,
+    oneCore: "one core",
     answeredIn: (v) => `Answered in <b>${ms(v.took)}</b> with AltoPIR.`,
-    shownIdle: (v) => `Shown after <b>${ms(v.replayed)}</b>, the time of this lookup with ${v.scheme}. With AltoPIR it took <b>${ms(v.took)}</b>.`,
     shownBusyOurs: (v) => `Shown after <b>${ms(v.replayed)}</b>, when AltoPIR answers ${v.n} lookups that arrive at once. This lookup alone took <b>${ms(v.took)}</b>.`,
-    shownBusy: (v) => `Shown after <b>${ms(v.replayed)}</b>, when ${v.scheme} answers ${v.n} lookups that arrive at once. AltoPIR answers them in <b>${ms(v.oursBusy)}</b>.`,
     noAnswer: "The demo client did not answer: ",
-    opTitle: "Throughput", perSecond: "Lookups per second", perDay: "Lookups per day", alone: "One lookup alone",
-    count: (v) => words(v.n), database: (v) => `${bytes(v.n)} database`,
-    fastest: (v) => `Fastest existing scheme: ${v.qps} lookups per second (${v.name}${v.size ? ", " + v.size : ""}).`,
     foot: 'Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned, ' +
           '<a href="https://github.com/Phishing-Database/Phishing.Database">Phishing.Database</a> (MIT), and ' +
           '<a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0), Wikipedia passages of ' +
@@ -295,11 +274,9 @@ const I18N = {
     clusterOf: (v) => fill(KO.clusterOf, { rows: int(v.rows) }), searchAt: (v) => fill(KO.searchAt, v),
     idleRag: (v) => fill(KO.idleRag, v), prefill: (v) => fill(KO.prefill, v), modelAnswer: (v) => fill(KO.modelAnswer, v),
     answeredInRag: (v) => fill(KO.answeredInRag, { took: ms(v.took) }),
-    shownIdleRag: (v) => fill(KO.shownIdleRag, { replayed: ms(v.replayed), scheme: v.scheme, took: ms(v.took) }),
     shownBusyOursRag: (v) => fill(KO.shownBusyOursRag, { replayed: ms(v.replayed), n: v.n, took: ms(v.took) }),
-    shownBusyRag: (v) => fill(KO.shownBusyRag, { replayed: ms(v.replayed), scheme: v.scheme, n: v.n, oursBusy: ms(v.oursBusy) }),
-    busy: (v) => fill(KO.busy, v), whyBusy: (v) => fill(KO.whyBusy, v),
-    whyIdle: (v) => fill(v.replay ? KO.whyIdleReplay : KO.whyIdleLive, v),
+    busy: (v) => fill(KO.busy, v), whyBusy: (v) => fill(KO.whyBusy, v), whyIdleRace: (v) => fill(KO.whyIdleRace, v),
+    times: (v) => fill(KO.times, v), moreThan: (v) => fill(KO.moreThan, v), slower: (v) => fill(KO.slower, v),
     seen: (v) => fill(KO.seen, { n: wordsKo(v.n) }), noneMatch: (v) => fill(KO.noneMatch, { n: wordsKo(v.n) }),
     noForm: (v) => fill(KO.noForm, { forms: v.n, entries: wordsKo(v.entries) }),
     numbers: (v) => fill(KO.numbers, v), bucketsOf: (v) => fill(KO.bucketsOf, { rows: int(v.rows) }),
@@ -307,15 +284,8 @@ const I18N = {
     requests: (v) => fill(v.filler > 0 ? KO.requestsFiller : KO.requests, v),
     readInFull: (v) => (v.r > 1 ? KO.readInFull : KO.readInFullOne), readableOnly: (v) => fill(KO.readableOnly, v),
     embedAt: (v) => fill(KO.embedAt, v), encryptAt: (v) => fill(KO.encryptAt, v), decryptAt: (v) => fill(KO.decryptAt, v),
-    compareBusy: (v) => fill(KO.compareBusy, v), answering: (v) => fill(KO.answering, v),
-    waitBusy: (v) => fill(KO.waitBusy, { time: ms(v.target), n: v.n, where: v.where }),
-    waitIdle: (v) => fill(KO.waitIdle, { time: ms(v.target), where: v.where }),
     answeredIn: (v) => fill(KO.answeredIn, { took: ms(v.took) }),
-    shownIdle: (v) => fill(KO.shownIdle, { replayed: ms(v.replayed), scheme: v.scheme, took: ms(v.took) }),
     shownBusyOurs: (v) => fill(KO.shownBusyOurs, { replayed: ms(v.replayed), n: v.n, took: ms(v.took) }),
-    shownBusy: (v) => fill(KO.shownBusy, { replayed: ms(v.replayed), scheme: v.scheme, n: v.n, oursBusy: ms(v.oursBusy) }),
-    count: (v) => wordsKo(v.n), database: (v) => fill(KO.database, { size: bytes(v.n) }),
-    fastest: (v) => fill(v.size ? KO.fastest : KO.fastestNoSize, v),
     recordedText: Object.fromEntries(Object.entries(KO_RECORDED).map(([en, k]) => [en, KO[k]])),
   },
 };
@@ -359,10 +329,11 @@ let serverMsg = { key: "connecting" };   // the masthead status, as a text key o
 let current = "passwords";
 let seq = 0, busy = false;   // only the latest request may render
 let autoShown = false;       // an example password is shown until the user types their own
-let scheme = "AltoPIR";
 const CROWD = 100;   // lookups that arrive at once on a busy server
 let crowd = true;    // busy by default; idle shows one lookup alone
-let last = null;     // the lookup on screen, so the comparison follows the scheme and load pickers
+let last = null;     // the lookup on screen, so the load switch can run it again
+let race = null;     // the race on screen: its tab, start time, rows and animation frame
+let boardDrawn = false;   // the throughput bars grow only when the page first draws them
 let view = { kind: "idle" };   // what the answer box shows, so a language switch can draw it again
 const sleep = (t) => new Promise((r) => setTimeout(r, t));
 function baselines(db) { return ((info.operator || {}).baselines || {})[db]; }
@@ -389,12 +360,14 @@ function setTab(db) {
   $("go").disabled = !info.databases[db] || busy;
   $("input").readOnly = !!replay;
   view = { kind: "idle" };
+  last = null;
   $("wire").hidden = true;
+  stopRace();
   renderTab();
   renderView();
-  renderSchemes(db);
-  renderOperator();
-  $("input").focus();
+  renderRace();
+  renderBoard();
+  $("input").focus({ preventScroll: true });
 }
 
 // the text of the current tab; drawn again when the language changes, without touching the input
@@ -421,32 +394,132 @@ function renderTab() {
   }
 }
 
-function renderSchemes(db) {
-  const b = baselines(db), box = $("schemes");
-  if (!b) { box.hidden = true; scheme = "AltoPIR"; return; }
-  // a scheme without a measured throughput (YPIR+SP runs on one core) has no time for many lookups at once
-  const usable = (name) => name === "AltoPIR" || (b.schemes[name] && (!crowd || b.schemes[name].qps));
-  if (!usable(scheme)) scheme = "AltoPIR";
+// a multiplier as the page writes it: whole numbers from 10 up, one decimal below
+function times(x) { return x >= 9.95 ? String(Math.round(x)) : x.toFixed(1); }
+function perSec(v) { return v < 10 ? v.toFixed(1) : int(v); }
+
+// The time each scheme takes for a lookup, by one rule for all: the client work and network time of the recorded
+// AltoPIR lookup plus the scheme's server time for its requests (times the lookups that arrive at once), from the
+// single-query time and throughput measured on this server. AltoPIR alone on an idle server is the recorded lookup itself.
+// A scheme measured on one core only has no time for many lookups at once (null).
+function raceTimes(db, d, many) {
+  const tm = d.wire.time, k = d.wire.requests, n = many ? CROWD : 1, client = clientMs(tm);
+  const own = ((info.operator || {}).databases || {})[db], b = baselines(db);
+  const network = own ? Math.max(0, tm.round_trip_ms - estMs(own, k)) : 0;
+  const rows = [{ name: "AltoPIR", ours: true, ms: many && own ? client + network + estMs(own, k * n) : tookMs(tm) }];
+  for (const [name, s] of Object.entries(b ? b.schemes : {}))
+    rows.push({ name, ms: many && !s.qps ? null : client + network + estMs(s, k * n) });
+  // AltoPIR first, then the others in the order they finish
+  return [rows[0], ...rows.slice(1).sort((x, y) => (x.ms ?? Infinity) - (y.ms ?? Infinity))];
+}
+
+function stopRace() {
+  if (race && race.frame) cancelAnimationFrame(race.frame);
+  race = null;
+}
+function startRace(db, d, many, t0) {
+  stopRace();
+  race = { db, t0, many, rows: raceTimes(db, d, many), frame: 0 };
+  renderRace();
+}
+// a clock that runs while a scheme answers: milliseconds up to a second, then tenths of a second
+function clock(e) { return e < 1000 ? Math.round(e) + " ms" : (e / 1000).toFixed(1) + " s"; }
+
+// one bar of the race at e milliseconds after the click: it fills over the scheme's own time, then shows that time and,
+// for an existing scheme, how many times longer it took than AltoPIR (written from the start but shown only then, so the
+// columns keep their width)
+function paintRow(r, e) {
+  if (r.ms == null || !r.fill) return false;
+  const f = Math.min(1, e / r.ms), done = f >= 1;
+  r.fill.style.width = (100 * f).toFixed(2) + "%";
+  if (!done) { r.t.textContent = clock(e); return true; }
+  if (!r.painted) { r.painted = true; r.el.classList.add("done"); r.t.textContent = ms(r.ms); }
+  return false;
+}
+function tick() {
+  if (!race) return;
+  const e = performance.now() - race.t0;
+  let running = false;
+  for (const r of race.rows) running = paintRow(r, e) || running;
+  race.frame = running ? requestAnimationFrame(tick) : 0;
+}
+
+// the race box of the current tab: the load switch, one bar per scheme, and what the bars mean
+function renderRace() {
+  const db = current, b = baselines(db), box = $("race");
+  if (!b) { box.hidden = true; return; }
   box.hidden = false;
-  const who = el("div", { class: "row" }, el("span", {}, t("answerWith")));
-  for (const name of ["AltoPIR", ...Object.keys(b.schemes)]) {
-    const btn = el("button", { type: "button", class: name === "AltoPIR" ? "ours" : "", "aria-pressed": String(name === scheme) }, name);
-    if (!usable(name)) { btn.disabled = true; btn.title = t("oneCoreOnly"); }
-    btn.onclick = () => { scheme = name; renderSchemes(db); refreshCompare(db); };
-    who.append(btn);
-  }
-  const load = el("div", { class: "row" }, el("span", {}, t("server")));
+  $("race-title").textContent = t(db === "rag" ? "raceTitleRag" : "raceTitle");
+  const load = $("load");
+  load.replaceChildren(el("span", {}, t("server")));
   for (const [label, value] of [[t("busy", { n: CROWD }), true], [t("idle"), false]]) {
     const btn = el("button", { type: "button", "aria-pressed": String(value === crowd) }, label);
-    btn.onclick = () => { crowd = value; renderSchemes(db); refreshCompare(db); };
+    btn.onclick = () => {
+      if (crowd === value || busy) return;   // a lookup on its way keeps the load it started with
+      crowd = value;
+      if (last && last.db === current) { $("input").value = last.input; submit(); } else renderRace();
+    };
     load.append(btn);
   }
-  const why = crowd
-    ? t("whyBusy", { n: CROWD, where: where() })
-    : scheme !== "AltoPIR"
-      ? t("whyIdle", { scheme, where: where(), replay: !!info.replay })
-      : null;
-  box.replaceChildren(who, load, why ? el("p", { class: "why" }, why) : "");
+  // before the first lookup the bars stand empty; a race in progress is drawn again where it is
+  const live = race && race.db === db ? race : null;
+  const rows = live ? live.rows : [{ name: "AltoPIR", ours: true },
+    ...Object.entries(b.schemes).map(([name, s]) => ({ name, ms: crowd && !s.qps ? null : undefined }))];
+  const box2 = $("race-rows");
+  box2.replaceChildren();
+  const ours = rows[0].ms;
+  for (const r of rows) {
+    const x = r.ms && ours ? r.ms / ours : 0;
+    r.fill = el("span");
+    r.t = el("span", { class: "t" });
+    r.x = el("span", { class: "x" }, !r.ours && x >= 1.095 ? t("slower", { r: times(x) }) : "");
+    r.x.hidden = !r.x.textContent;
+    r.painted = false;
+    const n = el("span", { class: "n" }, r.name), v = el("span", { class: "v" }, r.t, r.x);
+    r.el = el("div", { class: "rrow" + (r.ours ? " ours" : "") + (r.ms === null ? " na" : "") },
+      n, el("span", { class: "b" }, r.ms === null ? null : r.fill), v);
+    if (r.ms === null) { r.t.textContent = t("oneCore"); n.title = v.title = t("oneCoreOnly"); }
+    box2.append(r.el);
+  }
+  $("race-why").textContent = crowd ? t("whyBusy", { n: CROWD, where: where() }) : t("whyIdleRace", { where: where() });
+  $("race-cap").textContent = tx(b.note);
+  if (live) {
+    if (live.frame) cancelAnimationFrame(live.frame);
+    tick();
+  }
+}
+
+// the throughput of AltoPIR against the fastest existing scheme on each database, as a multiplier and two bars
+function renderBoard() {
+  const dbs = (info.operator || {}).databases || {}, tiles = $("tiles");
+  const grow = !boardDrawn;
+  tiles.replaceChildren();
+  for (const db of ["passwords", "urls", "rag", "docs"]) {
+    const o = dbs[db], b = baselines(db);
+    if (!o || !b || !info.databases[db]) continue;
+    const best = Object.entries(b.schemes).filter(([, s]) => s.qps).sort((x, y) => y[1].qps - x[1].qps)[0];
+    if (!best) continue;
+    const [name, s] = best;
+    const bar = (cls, n, v) => el("span", { class: "mrow" + cls }, el("span", { class: "n" }, n),
+      el("span", { class: "b" }, el("span", { style: `width:${Math.max(1, 100 * v / o.qps).toFixed(2)}%` })),
+      el("span", { class: "v" }, perSec(v)));
+    const tile = el("button", { type: "button", class: "tile", "aria-pressed": String(db === current) },
+      el("span", { class: "app" }, t(DBS[db].name)),
+      el("span", { class: "x" }, t("times", { x: times(o.qps / s.qps) })),
+      el("span", { class: "than" }, t("moreThan", { name })),
+      el("span", { class: "mini" }, bar(" ours", "AltoPIR", o.qps), bar("", name, s.qps)));
+    tile.onclick = () => {
+      if (db !== current) setTab(db);
+      document.querySelector(".tabs").scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    tiles.append(tile);
+  }
+  $("board").hidden = !tiles.children.length;
+  if (tiles.children.length && grow) {
+    boardDrawn = true;
+    $("board").classList.add("grow");
+    setTimeout(() => $("board").classList.remove("grow"), 1600);
+  }
 }
 
 function verdict(kind, head, sub) {
@@ -479,14 +552,11 @@ function renderAnswer(db, d) {
                           el("p", { class: "say" }, d.answer)), list);
 }
 
-// the answer box: the tab's hint, the wait for the chosen scheme, the answer with its note, or an error
+// the answer box: the tab's hint, the answer with its note, or an error
 function renderView() {
   const v = view, box = $("answer");
   if (v.kind === "idle") {
     box.replaceChildren(el("p", { class: "placeholder" }, t(info.replay ? "pickAbove" : DBS[current].idle, info.databases[current])));
-  } else if (v.kind === "wait") {   // the bar keeps running; only its text changes
-    v.head.textContent = t("answering", v);
-    v.small.textContent = t(v.many ? "waitBusy" : "waitIdle", { ...v, where: where() });
   } else if (v.kind === "error") {
     box.replaceChildren(el("p", { class: "error" }, t("noAnswer") + v.message));
   } else {
@@ -495,19 +565,16 @@ function renderView() {
     // the note goes above a list of passages, which can run below the fold, and under a short verdict
     if (d.wire && !d.error) {
       const took = tookMs(d.wire.time), rag = db === "rag" ? "Rag" : "";
-      const vars = { ...v, took, n: CROWD };
-      const note = v.replayed == null ? t("answeredIn" + rag, vars)
-        : !v.many ? t("shownIdle" + rag, vars)
-        : v.scheme === "AltoPIR" ? t("shownBusyOurs" + rag, vars)
-        : t("shownBusy" + rag, vars);
+      const vars = { replayed: v.replayed, took, n: CROWD };
+      const note = v.replayed == null ? t("answeredIn" + rag, vars) : t("shownBusyOurs" + rag, vars);
       const top = db === "docs" || db === "rag";
       box[top ? "prepend" : "append"](el("p", { class: "replayed" + (top ? " top" : ""), html: note }));
     }
-    if (d.wire) renderWire(db, v.input, d, last && last.d === d ? last.sel : v.scheme); else $("wire").hidden = true;
+    if (d.wire) renderWire(db, v.input, d); else $("wire").hidden = true;
   }
 }
 
-function renderWire(db, input, d, chosen) {
+function renderWire(db, input, d) {
   const w = d.wire, m = info.databases[db];
   const stayed = $("stayed"), sent = $("sent");
   stayed.replaceChildren();
@@ -550,82 +617,47 @@ function renderWire(db, input, d, chosen) {
   for (const [n, v, c] of parts) lg.append(el("dt", { style: `background:${c}` }), el("dd", {}, n), el("dd", { class: "v" }, ms(v)));
   lg.append(el("dt", { class: "total" }), el("dd", { class: "total" }, t(db === "rag" ? "ttft" : "total")), el("dd", { class: "v total" }, ms(total)));
   last = { db, d, input };
-  renderCompare(db, d, chosen);
   $("wire").hidden = false;
 }
 
-function refreshCompare(db) { if (last && last.db === db && !$("wire").hidden) renderCompare(db, last.d, scheme); }
-
-function renderCompare(db, d, chosen) {
-  const b = baselines(db), box = $("compare");
-  if (last) last.sel = chosen;
-  if (!b) { box.hidden = true; return; }
-  // every bar uses the same rule: measured single-query time and throughput on this server, for this many requests
-  const k = d.wire.requests * (crowd ? CROWD : 1), ours = ((info.operator || {}).databases || {})[db];
-  const rows = ours ? [["AltoPIR", estMs(ours, k)]] : [];
-  for (const [name, s] of Object.entries(b.schemes)) rows.push([name, crowd && !s.qps ? null : estMs(s, k)]);
-  $("compare-title").textContent = crowd ? t("compareBusy", { n: CROWD }) : t("compareIdle");
-  const bars = (box, rows, fmt) => {
-    const top = Math.max(...rows.filter((r) => r[1] != null).map((r) => r[1]));
-    box.replaceChildren();
-    for (const [name, v] of rows) {
-      const cls = "crow" + (name === "AltoPIR" ? " ours" : "") + (name === chosen && name !== "AltoPIR" ? " sel" : "");
-      box.append(el("div", { class: cls }, el("span", { class: "n" }, name),
-        el("span", { class: "b" }, v == null ? null : el("span", { style: `width:${Math.max(0.4, 100 * v / top).toFixed(2)}%` })),
-        el("span", { class: "v" }, v == null ? t("oneCore") : fmt(v))));
-    }
-  };
-  bars($("compare-rows"), rows, (v) => (v >= 1000 ? (v / 1000).toFixed(2) + " s" : ms(v)));
-  const qrows = [["AltoPIR", ours ? ours.qps : null]];
-  for (const [name, s] of Object.entries(b.schemes)) qrows.push([name, s.qps]);
-  bars($("compare-qps"), qrows, (v) => (v < 10 ? v.toFixed(1) : int(v)));
-  $("compare-cap").textContent = tx(b.note);
-  box.hidden = false;
-}
-
+// One lookup, raced: every scheme's bar starts with the click. AltoPIR's answer appears when its own bar ends (on a
+// busy server, when it has answered all the lookups that arrived at once); the other bars keep running to their times.
 async function submit(ev) {
   if (ev) ev.preventDefault();
   const raw = $("input").value;
   const input = current === "passwords" ? raw : raw.trim();   // a password is checked exactly as typed
   if (!input || !info.databases[current] || busy) return;
-  const db = current, mine = ++seq, chosen = scheme, t0 = performance.now();
+  const db = current, mine = ++seq, many = crowd, t0 = performance.now();
   busy = true;
+  stopRace();
+  renderRace();
   document.body.classList.add("loading");
   $("go").disabled = true;
   try {
+    // the recorded copy knows the lookup at once, so its race starts with the click; a live lookup starts it on arrival
+    const early = window.altopirReplay ? await window.altopirReplay.peek(db, input) : null;
+    if (early && early.wire && mine === seq && db === current) startRace(db, early, many, t0);
     const r = await fetch("/api/" + db, { method: "POST", headers: { "Content-Type": "application/json" },
                                           body: JSON.stringify({ input }) });
     const d = await r.json();
     if (mine !== seq || db !== current) return;
-    const many = crowd, n = many ? CROWD : 1;
-    const ours = ((info.operator || {}).databases || {})[db];
-    const base = !d.wire || !baselines(db) ? null : chosen === "AltoPIR" ? ours : baselines(db).schemes[chosen];
-    let replayed = null, oursBusy = null;
-    if (base && (many || chosen !== "AltoPIR") && (!many || base.qps)) {
-      // the chosen scheme's measured speed: same client work and network, its server time for n lookups at once
-      const tm = d.wire.time, k = d.wire.requests, client = clientMs(tm);
-      const network = ours ? Math.max(0, tm.round_trip_ms - estMs(ours, k)) : 0;
-      const target = client + network + estMs(base, k * n), left = target - (performance.now() - t0);
-      replayed = target;
-      if (ours) oursBusy = client + network + estMs(ours, k * n);
-      if (left > 0) {
-        const fill = el("div", { class: "fill" }), head = el("p"), small = el("small");
-        view = { kind: "wait", scheme: chosen, target, many, n: CROWD, head, small };
-        $("answer").replaceChildren(el("div", { class: "wait" }, head, el("div", { class: "track" }, fill), small));
-        renderView();
-        document.body.classList.remove("loading");
-        requestAnimationFrame(() => { fill.style.transition = `width ${left}ms linear`; fill.style.width = "100%"; });
-        await sleep(left);
-        if (mine !== seq || db !== current) return;
-      }
+    let replayed = null;
+    if (d.wire && baselines(db)) {
+      if (!race) startRace(db, d, many, t0);
+      const ours = race.rows[0].ms, left = ours - (performance.now() - t0);
+      if (many) replayed = ours;
+      if (left > 0) await sleep(left);
+      if (mine !== seq || db !== current) return;
     }
-    view = { kind: "answer", db, d, input, scheme: chosen, many, replayed, oursBusy };
+    view = { kind: "answer", db, d, input, many, replayed };
     renderView();
   } catch (e) {
     if (mine !== seq) return;
     view = { kind: "error", message: e.message };
     renderView();
     $("wire").hidden = true;
+    stopRace();
+    renderRace();
   } finally {
     busy = false;
     document.body.classList.remove("loading");
@@ -633,36 +665,7 @@ async function submit(ev) {
   }
 }
 
-function renderOperator() {
-  const op = info.operator || {}, dbs = op.databases || {};
-  if (!Object.keys(dbs).length) { $("operator").hidden = true; return; }
-  $("operator").hidden = false;
-  $("op-note").textContent = tx(op.note || "");
-  $("op-note").hidden = !op.note;
-  const cards = $("op-cards");
-  cards.replaceChildren();
-  for (const db of ["passwords", "urls", "docs"]) {
-    const o = dbs[db], m = info.databases[db];
-    if (!o || !m) continue;
-    const dl = el("dl");
-    const row = (k, v, big) => dl.append(el("dt", {}, k), el("dd", { class: big ? "big" : "" }, v));
-    row(t("perSecond"), int(o.qps), true);
-    row(t("perDay"), t("count", { n: o.qps * 86400 }));
-    row(t("alone"), ms(o.single_ms));
-    const card = el("div", { class: "card" }, el("h3", {}, t(DBS[db].name)),
-                    el("p", { class: "db" }, t("database", { n: m.db_bytes })), dl);
-    const b = baselines(db);
-    if (b) {
-      const best = Object.entries(b.schemes).filter(([, s]) => s.qps).sort((x, y) => y[1].qps - x[1].qps)[0];
-      if (best) card.append(el("p", { class: "vs" }, t("fastest", { qps: best[1].qps < 10 ? best[1].qps.toFixed(1) : int(best[1].qps),
-                                                                  name: best[0], size: tx(b.size_note) })));
-    }
-    if (db === current) card.classList.add("current");
-    cards.append(card);
-  }
-}
-
-// every text on the page in the current language; the tab, the pickers and a shown answer keep their state
+// every text on the page in the current language; the tab, the load switch, a race and a shown answer keep their state
 function applyLang() {
   document.documentElement.lang = lang;
   document.title = t("title");
@@ -677,14 +680,13 @@ function applyLang() {
   $("wire-title").textContent = t(replay ? "wireTitleReplay" : "wireTitle");
   $("stayed-title").textContent = t(replay ? "stayedTitleReplay" : "stayedTitle");
   $("timing-title").textContent = t(replay ? "timingTitleReplay" : "timingTitle");
-  if (!last) $("compare-title").textContent = t("compareTitle");
   if (!ready) return;
   renderTab();
   renderView();
-  // the panel of an earlier lookup stays on screen while the next one waits
-  if (view.kind !== "answer" && last && !$("wire").hidden) renderWire(last.db, last.input, last.d, last.sel);
-  renderSchemes(current);
-  renderOperator();
+  // the panel of an earlier lookup stays on screen while the next one runs
+  if (view.kind !== "answer" && last && !$("wire").hidden) renderWire(last.db, last.input, last.d);
+  renderRace();
+  renderBoard();
 }
 
 // a plain URL opens in English; only ?lang=ko opens Korean
@@ -708,7 +710,6 @@ async function load() {
   // ?db=urls&q=...&theme=light opens a tab and runs one lookup (for slides and screenshots)
   const qs = new URLSearchParams(location.search);
   if (qs.get("theme")) document.documentElement.dataset.theme = qs.get("theme");
-  if (qs.get("scheme")) scheme = qs.get("scheme");
   if (qs.get("load") === "idle") crowd = false;
   applyLang();
   ready = true;

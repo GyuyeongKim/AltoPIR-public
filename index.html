@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AltoPIR · Private lookups</title>
 <meta name="description" content="Recorded private lookups with AltoPIR: leaked passwords, unsafe links, Wikipedia passages and passages for a language model, answered without the server learning what was asked.">
-<link rel="stylesheet" href="app.css?v=0f416ee4c9">
+<link rel="stylesheet" href="app.css?v=30bf364d2f">
 <script>
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 if (new URLSearchParams(location.search).get("lang") === "ko") document.documentElement.lang = "ko";
@@ -34,6 +34,11 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
   database, and the answer comes back in a form that only this machine can read.</p>
 </section>
 
+<section class="board" id="board" hidden>
+  <h2 data-i18n="boardTitle">Throughput against the fastest existing scheme</h2>
+  <div class="tiles" id="tiles"></div>
+</section>
+
 <nav class="tabs" role="tablist" aria-label="Databases" data-i18n-aria="tabsAria">
   <button role="tab" class="tab" data-db="passwords" aria-selected="true" data-i18n="dbPasswords">Leaked passwords</button>
   <button role="tab" class="tab" data-db="urls" aria-selected="false" data-i18n="dbUrls">Unsafe links</button>
@@ -52,49 +57,46 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
         <button type="submit" class="go" id="go">Check</button>
       </div>
       <div class="examples" id="examples"></div>
-      <div class="schemes" id="schemes" hidden></div>
     </form>
     <div class="answer" id="answer" aria-live="polite">
       <p class="placeholder" id="placeholder"></p>
     </div>
   </section>
 
-  <aside class="wire" id="wire" hidden>
-    <h2 id="wire-title">What left this machine</h2>
-    <div class="split">
-      <div>
-        <h3 id="stayed-title">Stayed here</h3>
-        <ul id="stayed"></ul>
+  <div class="side">
+    <div class="race" id="race" hidden>
+      <div class="race-head">
+        <h3 id="race-title">Time to the answer</h3>
+        <div class="load" id="load"></div>
       </div>
-      <div>
-        <h3 data-i18n="received">The server received</h3>
-        <ul id="sent"></ul>
+      <div id="race-rows"></div>
+      <p class="why" id="race-why"></p>
+      <p class="cap" id="race-cap"></p>
+    </div>
+    <aside class="wire" id="wire" hidden>
+      <h2 id="wire-title">What left this machine</h2>
+      <div class="split">
+        <div>
+          <h3 id="stayed-title">Stayed here</h3>
+          <ul id="stayed"></ul>
+        </div>
+        <div>
+          <h3 data-i18n="received">The server received</h3>
+          <ul id="sent"></ul>
+        </div>
       </div>
-    </div>
-    <figure class="hex">
-      <pre id="hex"></pre>
-      <figcaption data-i18n="hexCap">96 bytes from the start of the encrypted key in the request. The rest looks the same to the server.</figcaption>
-    </figure>
-    <div class="timing">
-      <h3 id="timing-title">Time of the live AltoPIR lookup</h3>
-      <div class="bar" id="bar"></div>
-      <dl class="legend" id="legend"></dl>
-    </div>
-    <div class="compare" id="compare" hidden>
-      <h3 id="compare-title">Server time of this lookup</h3>
-      <div id="compare-rows"></div>
-      <h3 class="second" data-i18n="qpsTitle">Lookups per second</h3>
-      <div id="compare-qps"></div>
-      <p class="cap" id="compare-cap"></p>
-    </div>
-  </aside>
+      <figure class="hex">
+        <pre id="hex"></pre>
+        <figcaption data-i18n="hexCap">96 bytes from the start of the encrypted key in the request. The rest looks the same to the server.</figcaption>
+      </figure>
+      <div class="timing">
+        <h3 id="timing-title">Time of the live AltoPIR lookup</h3>
+        <div class="bar" id="bar"></div>
+        <dl class="legend" id="legend"></dl>
+      </div>
+    </aside>
+  </div>
 </main>
-
-<section class="operator" id="operator" hidden>
-  <h2 data-i18n="opTitle">Throughput</h2>
-  <p class="note" id="op-note"></p>
-  <div class="cards" id="op-cards"></div>
-</section>
 
 <footer class="foot">
   <p data-i18n-html="foot">Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned,
@@ -105,7 +107,7 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
 </footer>
 
 </div>
-<script src="replay.js?v=a7ed052cd9"></script>
-<script src="app.js?v=809f401c98"></script>
+<script src="replay.js?v=3fd4763e7c"></script>
+<script src="app.js?v=01db4da4fc"></script>
 </body>
 </html>

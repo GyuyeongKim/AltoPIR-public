@@ -1,12 +1,15 @@
 "use strict";
 // Static copy of the demo page: answers its two API calls from lookups recorded on the demo client (replay.json),
 // each after the time the recorded lookup took on the client, so the page runs without a client or a server.
+// The page may also read a recorded lookup at once (altopirReplay.peek) to time the bars of the schemes.
 (() => {
   const network = window.fetch.bind(window);
   let recorded = null;
   const load = () => recorded || (recorded = network("replay.json?v=6373849d29").then((r) => r.json()));
   const reply = (body) => new Response(JSON.stringify(body), { headers: { "Content-Type": "application/json" } });
   const sleep = (t) => new Promise((r) => setTimeout(r, t));
+  // the recorded lookup without the wait, so the page can start its race of the schemes when the lookup starts
+  window.altopirReplay = { peek: async (db, input) => ((await load()).lookups[db] || {})[input] || null };
   window.fetch = async (url, opts = {}) => {
     const path = String(url);
     if (path === "/api/info") return reply({ ...(await load()).info, replay: (await load()).replay });
