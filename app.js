@@ -37,7 +37,8 @@ function randomPassword() {
 }
 
 // Korean copy: demo/i18n/strings_before_codex.json rewritten by Codex with demo/i18n/codex_ko_prompt.md, applied verbatim
-// from demo/i18n/ko_codex.json; the race and throughput strings from demo/i18n/race_strings_codex.json, also verbatim.
+// from demo/i18n/ko_codex.json; the race and throughput strings from demo/i18n/race_strings_codex.json and the scan
+// strings from demo/i18n/scan_strings_codex.json, also verbatim.
 // {name} marks a value the page fills in.
 const KO = {
   "title": "AltoPIR · 검색 내용은 비공개",
@@ -164,6 +165,25 @@ const KO = {
   "rec.sizeNote.at8gb": "8 GB에서 측정",
   "rec.operatorNote": "Xeon Silver 4514Y 서버에서 연산에 코어 15개를 쓰고, 조회를 최대 128개씩 묶어 측정했습니다. AltoPIR 논문에서는 1 GB~64 GB 데이터베이스로 성능을 비교했습니다. 같은 코어를 사용했을 때 AltoPIR의 쿼리 처리량은 힌트 없이 동작하는 기존 방식 중 가장 빠른 방식의 24~50배였습니다.",
   "rec.error.notRecorded": "이 페이지에는 미리 기록한 조회만 있습니다. 위에서 하나를 선택하세요.",
+  "scanTitle": "서버 내부 동작 · 느리게 재생",
+  "scanSlow": "실제로 {time} 걸린 과정을 {x}배 느리게 재생",
+  "scanIdle": "조회 기록을 고르면 서버가 데이터베이스를 읽는 과정을 볼 수 있습니다.",
+  "scanQueries": "쿼리",
+  "scanAnswers": "응답",
+  "scanEach": "개당 {size}",
+  "scanCores": "코어 {n}개",
+  "scanBatch": "전체 {total}개 배치 중 {p}번째",
+  "unitBucket": "버킷",
+  "unitBuckets": "버킷 {n}개",
+  "unitCluster": "클러스터",
+  "unitClusters": "클러스터 {n}개",
+  "step1Busy": "조회 {n}건이 한꺼번에 들어옵니다. 서버는 암호화한 쿼리 {q}개를 받아 최대 {max}개씩 배치로 묶어 처리합니다.",
+  "step1One": "이번 조회만 들어옵니다. 서버는 암호화한 쿼리 1개를 받습니다.",
+  "step1Many": "이번 조회만 들어옵니다. 서버는 암호화한 쿼리 {q}개를 받아 한 배치로 처리합니다.",
+  "step2": "코어 {n}개가 데이터베이스를 나눠 처리합니다. 각 코어는 모든 {unit}에서 자신이 맡은 바이트 구간을 배치마다 한 번씩 읽고, 행렬 연산 장치로 읽은 데이터와 배치에 담긴 모든 쿼리를 곱합니다.",
+  "step3": "쿼리마다 암호화한 응답을 하나씩 만듭니다. 서버는 쿼리마다 모든 {unit}에서 데이터를 같은 방식으로 읽으므로 무엇을 조회했는지 알 수 없습니다.",
+  "step4": "자신이 보낸 쿼리의 응답은 {machine}만 복호화할 수 있습니다. 조회 결과는 {what}입니다.",
+  "whatOne": "{ids} {unit}",
 };
 // text that comes with the recording, by its English original -> its key in KO
 const KO_RECORDED = {
@@ -222,6 +242,17 @@ const I18N = {
     boardTitle: "Throughput against the fastest existing scheme",
     times: (v) => `${v.x}×`, moreThan: (v) => `more lookups per second than ${v.name}`,
     raceTitle: "Time to the answer", raceTitleRag: "Time to the first token", slower: (v) => `${v.r}× slower`,
+    scanTitle: "Inside the server, slowed down", scanSlow: (v) => `${v.x}× slower than the ${v.time} it took`,
+    scanIdle: "Pick a lookup to watch the server read the database.", scanQueries: "queries", scanAnswers: "answers",
+    scanEach: (v) => `${v.size} each`, scanCores: (v) => `${v.n} cores`, scanBatch: (v) => `batch ${v.p} of ${v.total}`,
+    unitBucket: "bucket", unitBuckets: (v) => `${v.n} buckets`, unitCluster: "cluster", unitClusters: (v) => `${v.n} clusters`,
+    step1Busy: (v) => `${v.n} lookups arrive at once and send ${v.q} encrypted queries, taken in batches of up to ${v.max}.`,
+    step1One: "This lookup alone sends one encrypted query.",
+    step1Many: (v) => `This lookup alone sends ${v.q} encrypted queries, taken as one batch.`,
+    step2: (v) => `${v.n} cores split the database: each core takes its own slice of every ${v.unit}, reads it once per batch, and multiplies it with all queries of the batch on its matrix engine.`,
+    step3: (v) => `Every query gets its own encrypted answer. The server read every ${v.unit} the same way for each query, so it cannot tell which one was asked for.`,
+    step4: (v) => `Only ${v.machine} can open the answers to its own queries: ${v.what}.`,
+    whatOne: (v) => `${v.unit} ${v.ids}`,
     whyBusy: (v) => `${v.n} lookups like this one arrive together. Each scheme answers all of them at the throughput measured on ${v.where}, and its bar ends when the last one is done.`,
     whyIdleRace: (v) => `Only this lookup reaches the server. Each existing scheme takes the server time of its official implementation on ${v.where}, with the client and network time of the AltoPIR lookup.`,
     found: "Found in leaked passwords",
@@ -277,6 +308,10 @@ const I18N = {
     shownBusyOursRag: (v) => fill(KO.shownBusyOursRag, { replayed: ms(v.replayed), n: v.n, took: ms(v.took) }),
     busy: (v) => fill(KO.busy, v), whyBusy: (v) => fill(KO.whyBusy, v), whyIdleRace: (v) => fill(KO.whyIdleRace, v),
     times: (v) => fill(KO.times, v), moreThan: (v) => fill(KO.moreThan, v), slower: (v) => fill(KO.slower, v),
+    scanSlow: (v) => fill(KO.scanSlow, v), scanEach: (v) => fill(KO.scanEach, v), scanCores: (v) => fill(KO.scanCores, v),
+    scanBatch: (v) => fill(KO.scanBatch, v), unitBuckets: (v) => fill(KO.unitBuckets, v), unitClusters: (v) => fill(KO.unitClusters, v),
+    step1Busy: (v) => fill(KO.step1Busy, v), step1Many: (v) => fill(KO.step1Many, v), step2: (v) => fill(KO.step2, v),
+    step3: (v) => fill(KO.step3, v), step4: (v) => fill(KO.step4, v), whatOne: (v) => fill(KO.whatOne, v),
     seen: (v) => fill(KO.seen, { n: wordsKo(v.n) }), noneMatch: (v) => fill(KO.noneMatch, { n: wordsKo(v.n) }),
     noForm: (v) => fill(KO.noForm, { forms: v.n, entries: wordsKo(v.entries) }),
     numbers: (v) => fill(KO.numbers, v), bucketsOf: (v) => fill(KO.bucketsOf, { rows: int(v.rows) }),
@@ -363,9 +398,11 @@ function setTab(db) {
   last = null;
   $("wire").hidden = true;
   stopRace();
+  stopScan();
   renderTab();
   renderView();
   renderRace();
+  renderScan();
   renderBoard();
   $("input").focus({ preventScroll: true });
 }
@@ -421,6 +458,7 @@ function startRace(db, d, many, t0) {
   stopRace();
   race = { db, t0, many, rows: raceTimes(db, d, many), frame: 0 };
   renderRace();
+  startScan(db, d, many, t0);
 }
 // a clock that runs while a scheme answers: milliseconds up to a second, then tenths of a second
 function clock(e) { return e < 1000 ? Math.round(e) + " ms" : (e / 1000).toFixed(1) + " s"; }
@@ -620,6 +658,193 @@ function renderWire(db, input, d) {
   $("wire").hidden = false;
 }
 
+// The scan of one lookup, slowed down. It follows the engine (src/amx_kernels.cpp, sw_scan_impl): the database is a
+// matrix with one row per record and one column per byte of a record, and the query of a client holds one value per
+// record. The cores split the byte columns, so each core owns the same slice of every record. Each core walks down the
+// records one block at a time, and inside a block it sweeps its columns from left to right, multiplying them with the
+// block of every query of the batch (up to the batch limit). One batch reads the whole database once; a busy server
+// reads it once per batch. Then every query gets its answer, and only the client can open the record it asked for.
+// cores behind each database's numbers: 15 engine cores for passwords, links and Wikipedia (rec.operatorNote), 16 for
+// RAG (rec.baselineNote.rag)
+const SCAN_CORES = { passwords: 15, urls: 15, docs: 15, rag: 16 };
+const SCAN_UNIT = { passwords: "Bucket", urls: "Bucket", docs: "Cluster", rag: "Cluster" };
+// the pace of the drawing, not a measurement: the batch forms, each batch is read and answered, the client opens its answer
+const SCAN_FORM = 700, SCAN_READ = 2800, SCAN_SEND = 450, SCAN_OPEN = 500;
+const SCAN_BLOCKS = 12, SCAN_STRIPES = 36;   // drawn blocks of records, and drawn record stripes
+let scan = null;   // the scan on screen: its plan, start time and animation frame
+
+function scanPlan(db, d, many) {
+  const m = info.databases[db], own = ((info.operator || {}).databases || {})[db];
+  const k = d.wire.requests, n = many ? CROWD : 1, q = k * n, max = (own && own.batch) || q;
+  const batches = [];
+  for (let left = q; left > 0; left -= max) batches.push(Math.min(max, left));
+  const read = SCAN_READ / batches.length, send = Math.min(SCAN_SEND, 1200 / batches.length);
+  return { db, many, q, max, batches, read, send, rows: m.rows, record: m.record_bytes, cores: SCAN_CORES[db] || 1,
+           real: own ? estMs(own, q) : null, mine: d.wire.local.map((x) => x.bucket),
+           end: SCAN_FORM + batches.length * (read + send) + SCAN_OPEN };
+}
+// where the drawing is e milliseconds after the click: phase 0 the batch forms, 1 a batch is read, 2 it is answered,
+// 3 the client opens its answer; f is the progress inside the phase and b the batch
+function scanAt(p, e) {
+  if (e < SCAN_FORM) return { phase: 0, f: e / SCAN_FORM, b: 0 };
+  let t = e - SCAN_FORM;
+  for (let b = 0; b < p.batches.length; b++) {
+    if (t < p.read) return { phase: 1, f: t / p.read, b };
+    t -= p.read;
+    if (t < p.send) return { phase: 2, f: t / p.send, b };
+    t -= p.send;
+  }
+  return { phase: 3, f: Math.min(1, t / SCAN_OPEN), b: p.batches.length - 1 };
+}
+function stopScan() {
+  if (scan && scan.frame) cancelAnimationFrame(scan.frame);
+  scan = null;
+}
+function startScan(db, d, many, t0) {
+  stopScan();
+  scan = { plan: scanPlan(db, d, many), t0, frame: 0, phase: -1 };
+  renderScan();
+}
+function scanTick() {
+  if (!scan) return;
+  const e = performance.now() - scan.t0, st = scanAt(scan.plan, e);
+  drawScan(st);
+  if (st.phase !== scan.phase) {
+    scan.phase = st.phase;
+    $("scan-steps").querySelectorAll("li").forEach((li, i) => {
+      li.className = i < st.phase ? "done" : i === st.phase ? "on" : "";
+    });
+  }
+  scan.frame = e < scan.plan.end + 50 ? requestAnimationFrame(scanTick) : 0;
+}
+function andList(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1]; }
+
+// the card of the current tab: before a lookup the database stands still; a lookup fills in the steps and plays
+function renderScan() {
+  const db = current, m = info.databases[db], box = $("scan");
+  if (!m || !m.rows || !baselines(db)) { box.hidden = true; return; }
+  box.hidden = false;
+  $("scan-title").textContent = t("scanTitle");
+  const p = scan && scan.plan.db === db ? scan.plan : null, u = SCAN_UNIT[db];
+  $("scan-hint").textContent = t("scanIdle");
+  $("scan-hint").hidden = !!p;
+  const reading = p ? p.batches.length * (p.read + p.send) : 0;
+  $("scan-slow").textContent = p && p.real ? t("scanSlow", { x: times(reading / p.real), time: ms(p.real) }) : "";
+  const steps = $("scan-steps");
+  steps.replaceChildren();
+  if (p) {
+    const unit = t("unit" + u), ids = p.mine.map(int);
+    const what = t("whatOne", { unit: lang === "en" && ids.length > 1 ? unit + "s" : unit,
+                                ids: lang === "ko" ? ids.map((x) => x + "번").join(", ") : andList(ids) });
+    for (const s of [p.many ? t("step1Busy", { n: CROWD, q: int(p.q), max: p.max })
+                       : p.q === 1 ? t("step1One") : t("step1Many", { q: p.q }),
+                     t("step2", { n: p.cores, unit }), t("step3", { unit }), t("step4", { machine: machine(), what })])
+      steps.append(el("li", {}, s));
+  }
+  if (scan) scan.phase = -1;
+  if (scan && scan.plan.db === db) {
+    if (scan.frame) cancelAnimationFrame(scan.frame);
+    scanTick();
+  } else drawScan(null);
+}
+
+function drawScan(st) {
+  const cv = $("scan-canvas"), W = cv.clientWidth, H = cv.clientHeight;
+  if (!W || !H || $("scan").hidden) return;
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+    cv.width = Math.round(W * dpr);
+    cv.height = Math.round(H * dpr);
+  }
+  const g = cv.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, W, H);
+  const css = getComputedStyle(document.documentElement), v = (n) => css.getPropertyValue(n).trim();
+  const C = { todo: v("--scan-todo"), read: v("--scan-read"), on: v("--scan-on"), mark: v("--scan-mark"),
+              ink: v("--ink"), ink3: v("--ink-3"), font: v("--sans") };
+  const db = current, m = info.databases[db], p = scan && scan.plan.db === db ? scan.plan : null;
+  if (!p) st = null;
+  const side = W < 360 ? 34 : 44, gap = W < 360 ? 10 : 14, top = 34, bottom = 22;
+  const dbx = side + gap, dbw = W - 2 * (side + gap), ax = dbx + dbw + gap, y0 = top, h = H - top - bottom;
+  const pitch = h / SCAN_STRIPES, sh = Math.max(1, pitch - (pitch > 3 ? 1 : 0.5));
+  const block = (s) => Math.floor(s * SCAN_BLOCKS / SCAN_STRIPES);
+  const reading = st && st.phase === 1, cur = reading ? Math.floor(st.f * SCAN_BLOCKS) : -1;
+  const sweep = reading ? st.f * SCAN_BLOCKS - cur : 0;
+  const allRead = st && st.phase >= 2;
+
+  // labels: the queries and answers of the batch on the sides, the records of the database in the middle
+  const text = (s, x, y, align, weight, size, color) => {
+    g.font = `${weight} ${size}px ${C.font}`;
+    g.textAlign = align;
+    g.fillStyle = color;
+    g.fillText(s, x, y);
+  };
+  const B = p ? p.batches[st.b] : 0, shown = st && st.phase === 0 ? Math.round(st.f * B) : B;
+  if (p) {
+    text(int(shown), side / 2, 12, "center", 600, 12, C.ink);
+    text(t("scanQueries"), side / 2, 26, "center", 400, 11, C.ink3);
+    text(st.phase >= 1 ? int(B) : "", ax + side / 2, 12, "center", 600, 12, C.ink);
+    text(t("scanAnswers"), ax + side / 2, 26, "center", 400, 11, C.ink3);
+  }
+  text(t("unit" + SCAN_UNIT[db] + "s", { n: int(m.rows) }), dbx + dbw / 2, 12, "center", 600, 12, C.ink);
+  text(t("scanEach", { size: bytes(m.record_bytes) }), dbx + dbw / 2, 26, "center", 400, 11, C.ink3);
+  const cores = p ? p.cores : SCAN_CORES[db] || 1;
+  text(t("scanCores", { n: cores }), dbx, H - 6, "left", 400, 11, C.ink3);
+  if (p && p.batches.length > 1 && st.phase >= 1)
+    text(t("scanBatch", { p: st.b + 1, total: p.batches.length }), dbx + dbw, H - 6, "right", 600, 11, C.ink);
+
+  // the database: one column strip per core, record stripes across them
+  const cg = cores > 1 ? 2 : 0, cw = (dbw - cg * (cores - 1)) / cores;
+  for (let s = 0; s < SCAN_STRIPES; s++) {
+    const y = y0 + s * pitch, bl = block(s);
+    for (let c = 0; c < cores; c++) {
+      const x = dbx + c * (cw + cg);
+      g.fillStyle = allRead || bl < cur ? C.read : C.todo;
+      g.fillRect(x, y, cw, sh);
+      if (bl === cur) { g.fillStyle = C.on; g.fillRect(x, y, cw * sweep, sh); }
+    }
+  }
+  // the queries and the answers of the batch, one thin column each (at most 20 drawn)
+  const cols = (x, n, paint) => {
+    const k = Math.max(1, Math.min(20, n)), w = (side - (k - 1)) / k;
+    for (let i = 0; i < k; i++) paint(x + i * (w + 1), w, i, k);
+  };
+  if (p) {
+    const nq = st.phase === 0 ? Math.max(0, shown) : B;
+    cols(0, B, (x, w, i, k) => {
+      if (i >= Math.ceil(nq * k / B)) return;
+      for (let s = 0; s < SCAN_STRIPES; s++) {
+        g.fillStyle = block(s) === cur ? C.on : C.todo;
+        g.fillRect(x, y0 + s * pitch, w, sh);
+      }
+    });
+    if (st.phase >= 1) cols(ax, B, (x, w) => {
+      const full = st.phase === 1 ? st.f : 1, away = st.phase === 2 ? st.f : 0;
+      g.globalAlpha = st.phase === 2 ? 1 - 0.7 * away : 1;
+      g.fillStyle = st.phase === 1 ? C.read : C.on;
+      g.fillRect(x + 6 * away, y0, w, h * full);
+      g.globalAlpha = 1;
+    });
+  } else {
+    for (const x of [0, ax]) cols(x, 20, (cx, w) => { g.fillStyle = C.todo; g.globalAlpha = 0.5; g.fillRect(cx, y0, w, h); g.globalAlpha = 1; });
+  }
+  // the client opens its answer: its own records, as the amber stripe of the logo
+  if (st && st.phase === 3) {
+    g.globalAlpha = st.f;
+    for (const id of p.mine) {
+      const y = y0 + ((id + 0.5) / m.rows) * h;
+      g.fillStyle = C.mark;
+      g.fillRect(dbx - 3, y - 2, dbw + 6, 4);
+      g.font = `700 11px ${C.font}`;
+      const label = int(id), tw = g.measureText(label).width;
+      g.fillStyle = C.mark;
+      g.fillRect(dbx + dbw - tw - 10, y - 9, tw + 10, 18);
+      text(label, dbx + dbw - 5, y + 4, "right", 700, 11, v("--scan-mark-ink"));
+    }
+    g.globalAlpha = 1;
+  }
+}
+
 // One lookup, raced: every scheme's bar starts with the click. AltoPIR's answer appears when its own bar ends (on a
 // busy server, when it has answered all the lookups that arrived at once); the other bars keep running to their times.
 async function submit(ev) {
@@ -631,6 +856,8 @@ async function submit(ev) {
   busy = true;
   stopRace();
   renderRace();
+  stopScan();
+  renderScan();
   document.body.classList.add("loading");
   $("go").disabled = true;
   try {
@@ -658,6 +885,8 @@ async function submit(ev) {
     $("wire").hidden = true;
     stopRace();
     renderRace();
+    stopScan();
+    renderScan();
   } finally {
     busy = false;
     document.body.classList.remove("loading");
@@ -686,6 +915,7 @@ function applyLang() {
   // the panel of an earlier lookup stays on screen while the next one runs
   if (view.kind !== "answer" && last && !$("wire").hidden) renderWire(last.db, last.input, last.d);
   renderRace();
+  renderScan();
   renderBoard();
 }
 
@@ -724,7 +954,10 @@ $("theme").onclick = () => {
   document.documentElement.dataset.theme = th;
   try { localStorage.setItem("theme", th); } catch (e) {}
   $("theme").textContent = t(th === "dark" ? "light" : "dark");
+  if (ready) renderScan();   // the drawing takes its colors from the theme
 };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (ready) renderScan(); });
+if (window.ResizeObserver) new ResizeObserver(() => { if (ready && !(scan && scan.frame)) drawScan(scan ? scanAt(scan.plan, performance.now() - scan.t0) : null); }).observe($("scan-canvas"));
 // the switch writes the language into the URL (?lang=ko, none for English), so a reload keeps it
 $("lang").onclick = () => {
   lang = lang === "ko" ? "en" : "ko";

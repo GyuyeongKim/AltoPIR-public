@@ -34,6 +34,11 @@
   --band-base: #77969a;
   --kame: #a5dee4;
   --kanzo: #fc9f4d;
+  --scan-todo: #dfe6e7;
+  --scan-read: #a5dee4;
+  --scan-on: #0d5661;
+  --scan-mark: #fc9f4d;
+  --scan-mark-ink: #08192d;
   --sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
   --display: var(--sans);
@@ -45,7 +50,7 @@
     --rule: #1f333a; --rule-2: #1a2d34; --rule-strong: #3c535a; --accent: #a5dee4; --accent-soft: #123840;
     --on-accent: #08192d; --good: #5dac81; --bad: #f17c67; --t-embed: #2b3a3f; --t-encrypt: #4b5a5e;
     --t-decrypt: #77969a; --t-model: #7a6431; --hex: #95abaf; --band: #0b4952; --band-tile: #135a64;
-    --band-track: #093d45; --band-rule: #22656f; color-scheme: dark;
+    --band-track: #093d45; --band-rule: #22656f; --scan-todo: #1f333a; --scan-read: #2b6c76; --scan-on: #a5dee4; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
@@ -53,7 +58,7 @@
   --rule: #1f333a; --rule-2: #1a2d34; --rule-strong: #3c535a; --accent: #a5dee4; --accent-soft: #123840;
   --on-accent: #08192d; --good: #5dac81; --bad: #f17c67; --t-embed: #2b3a3f; --t-encrypt: #4b5a5e;
   --t-decrypt: #77969a; --t-model: #7a6431; --hex: #95abaf; --band: #0b4952; --band-tile: #135a64;
-  --band-track: #093d45; --band-rule: #22656f; color-scheme: dark;
+  --band-track: #093d45; --band-rule: #22656f; --scan-todo: #1f333a; --scan-read: #2b6c76; --scan-on: #a5dee4; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -251,6 +256,28 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .race .why { margin: 10px 0 0; font-size: 12.5px; color: var(--ink-3); }
 .race .cap { margin: 6px 0 0; font-size: 12px; color: var(--ink-3); }
 
+/* the scan of one lookup, slowed down */
+.scan { border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px 18px; }
+.scan-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px;
+  margin-bottom: 12px; }
+.scan h3 { font: 600 12px/1 var(--sans); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); margin: 0; }
+.scan .slow { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+#scan-canvas { display: block; width: 100%; height: 236px; }
+.scan .hint { margin: 10px 0 0; font-size: 13px; color: var(--ink-3); }
+.scan .hint[hidden] { display: none; }
+.steps { margin: 14px 0 0; padding: 0; list-style: none; counter-reset: step; font-size: 13px; line-height: 1.45; }
+.steps li { position: relative; padding: 5px 0 5px 28px; color: var(--ink-3); counter-increment: step;
+  transition: color 200ms; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 19px; height: 19px;
+  border-radius: 50%; border: 1px solid var(--rule-strong); font: 600 11px/17px var(--sans); text-align: center;
+  color: var(--ink-3); box-sizing: border-box; }
+.steps li.on { color: var(--ink); }
+.steps li.on::before { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.steps li.done { color: var(--ink-2); }
+.steps li.done::before { border-color: var(--accent); color: var(--accent); }
+.steps li:last-child.on::before, .steps li:last-child.done::before { background: var(--kanzo); border-color: var(--kanzo);
+  color: #08192d; }
+
 .foot { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-3); }
 .foot p { margin: 0; }
 
@@ -269,7 +296,8 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
   #form { order: 2; }
   .race { order: 3; margin-top: 24px; }
   .answer { order: 4; margin-top: 28px; }
-  .wire { order: 5; margin-top: 32px; }
+  .scan { order: 5; margin-top: 28px; }
+  .wire { order: 6; margin-top: 32px; }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .field input { font-size: 16px; }
   .tabs { gap: 20px; }
@@ -278,6 +306,8 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
   .server { text-align: left; }
 }
 @media (max-width: 520px) {
+  #scan-canvas { height: 210px; }
+  .scan { padding: 18px 16px 16px; }
   .tile { padding: 14px 12px 12px; }
   .tile .x { font-size: 36px; margin: 8px 0 4px; }
   .mrow { grid-template-columns: minmax(0, 1fr) auto; }
