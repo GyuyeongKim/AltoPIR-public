@@ -168,7 +168,7 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .error { color: var(--bad); }
 
 /* wire */
-.wire { background: var(--surface); border-radius: 12px; padding: 22px 24px 20px; }
+.wire { background: var(--surface); border-radius: 12px; padding: 22px 24px 20px; margin-top: 36px; }
 .wire h2, .board h2 { font: 600 13px/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-2); margin: 0 0 18px; }
 .wire h3 { font: 600 12px/1 var(--sans); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3);

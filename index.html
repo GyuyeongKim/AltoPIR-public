@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AltoPIR · Private lookups</title>
 <meta name="description" content="Recorded private lookups with AltoPIR: leaked passwords, unsafe links, Wikipedia passages and passages for a language model, answered without the server learning what was asked.">
-<link rel="stylesheet" href="app.css?v=c749100442">
+<link rel="stylesheet" href="app.css?v=4ef89c1caa">
 <script>
 try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 if (new URLSearchParams(location.search).get("lang") === "ko") document.documentElement.lang = "ko";
@@ -64,27 +64,6 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
     <div class="answer" id="answer" aria-live="polite">
       <p class="placeholder" id="placeholder"></p>
     </div>
-  </section>
-
-  <div class="side">
-    <div class="race" id="race" hidden>
-      <div class="race-head">
-        <h3 id="race-title">Time to the answer</h3>
-        <div class="load" id="load"></div>
-      </div>
-      <div id="race-rows"></div>
-      <p class="why" id="race-why"></p>
-      <p class="cap" id="race-cap"></p>
-    </div>
-    <div class="scan" id="scan" hidden>
-      <div class="scan-head">
-        <h3 id="scan-title">Inside the server, slowed down</h3>
-        <span class="slow" id="scan-slow"></span>
-      </div>
-      <canvas id="scan-canvas" aria-hidden="true"></canvas>
-      <p class="hint" id="scan-hint"></p>
-      <ol class="steps" id="scan-steps"></ol>
-    </div>
     <aside class="wire" id="wire" hidden>
       <h2 id="wire-title">What left this machine</h2>
       <div class="split">
@@ -107,6 +86,27 @@ if (new URLSearchParams(location.search).get("lang") === "ko") document.document
         <dl class="legend" id="legend"></dl>
       </div>
     </aside>
+  </section>
+
+  <div class="side">
+    <div class="race" id="race" hidden>
+      <div class="race-head">
+        <h3 id="race-title">Time to the answer</h3>
+        <div class="load" id="load"></div>
+      </div>
+      <div id="race-rows"></div>
+      <p class="why" id="race-why"></p>
+      <p class="cap" id="race-cap"></p>
+    </div>
+    <div class="scan" id="scan" hidden>
+      <div class="scan-head">
+        <h3 id="scan-title">Inside the server, slowed down</h3>
+        <span class="slow" id="scan-slow"></span>
+      </div>
+      <canvas id="scan-canvas" aria-hidden="true"></canvas>
+      <p class="hint" id="scan-hint"></p>
+      <ol class="steps" id="scan-steps"></ol>
+    </div>
   </div>
 </main>
 
