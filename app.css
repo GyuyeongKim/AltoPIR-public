@@ -1,23 +1,39 @@
-/* pale palette shared with the Tessera demo page */
+/* Color: NIPPON COLORS, the 250 traditional colors of Japan (nipponcolors.com, after "The Traditional Colors of Japan",
+   PIE BOOKS 2007), picked to match the AltoPIR logo: the band is 藍 AI #0D5661 (the logo's deep teal), its lines and
+   AltoPIR's bars on it 瓶覗 KAMENOZOKI #A5DEE4 (the palest indigo dye, the logo's pale teal), and the one warm mark
+   萱草 KANZO #FC9F4D (the logo's amber stripe, the record a lookup fetches). Text 褐 KACHI #08192D, greys 白鼠 SHIRONEZUMI
+   #BDC0BA, 銀鼠 GINNEZUMI #91989F, 藍鼠 AINEZUMI #566C73, 深川鼠 FUKAGAWANEZUMI #77969A; found 赤紅 AKABENI #CB4042,
+   not found 常磐 TOKIWA #1B813E; dark theme accent 瓶覗, found 珊瑚朱 SANGOSYU #F17C67, not found 若竹 WAKATAKE #5DAC81.
+   Tints between these and white or black fill the surfaces and rules. */
 :root {
   --paper: #ffffff;
-  --surface: #f5f5f7;
-  --ink: #111113;
-  --ink-2: #45454a;
-  --ink-3: #6e6e73;
-  --rule: #e5e5ea;
-  --rule-2: #e8e8ed;
-  --rule-strong: #b8b8be;
-  --accent: #0062cc;
-  --accent-soft: #eef5fe;
+  --surface: #f0f6f7;
+  --ink: #08192d;
+  --ink-2: #33444f;
+  --ink-3: #566c73;
+  --rule: #dbe5e7;
+  --rule-2: #e6eef0;
+  --rule-strong: #b3c3c6;
+  --accent: #0d5661;
+  --accent-soft: #e2f3f5;
   --on-accent: #ffffff;
-  --good: #1f6e3b;
-  --bad: #b3261e;
-  --t-embed: #d1d1d6;
-  --t-encrypt: #aeaeb2;
-  --t-decrypt: #8e8e93;
-  --t-model: #e8d9b5;
-  --hex: #6e6e73;
+  --good: #1b813e;
+  --bad: #cb4042;
+  --t-embed: #d7dad5;
+  --t-encrypt: #bdc0ba;
+  --t-decrypt: #91989f;
+  --t-model: #f3d79c;
+  --hex: #566c73;
+  --band: #0d5661;
+  --band-ink: #ffffff;
+  --band-ink-2: #cde7ea;
+  --band-ink-3: #93c4ca;
+  --band-rule: #2b6c76;
+  --band-tile: #19616c;
+  --band-track: #0f4a54;
+  --band-base: #77969a;
+  --kame: #a5dee4;
+  --kanzo: #fc9f4d;
   --sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
   --display: var(--sans);
@@ -25,17 +41,19 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #161618; --surface: #1f1f23; --ink: #ffffff; --ink-2: #c7c7cc; --ink-3: #a1a1a6;
-    --rule: #2e2e32; --rule-2: #2a2a2e; --rule-strong: #48484d; --accent: #5ea2ff; --accent-soft: #17243a;
-    --on-accent: #0b1a2e; --good: #5cc27e; --bad: #ff7a6e; --t-embed: #3a3a3e; --t-encrypt: #636366;
-    --t-decrypt: #8e8e93; --t-model: #6b5c3a; --hex: #a1a1a6;
+    --paper: #0a161b; --surface: #11222a; --ink: #edf5f6; --ink-2: #c2d3d6; --ink-3: #95abaf;
+    --rule: #1f333a; --rule-2: #1a2d34; --rule-strong: #3c535a; --accent: #a5dee4; --accent-soft: #123840;
+    --on-accent: #08192d; --good: #5dac81; --bad: #f17c67; --t-embed: #2b3a3f; --t-encrypt: #4b5a5e;
+    --t-decrypt: #77969a; --t-model: #7a6431; --hex: #95abaf; --band: #0b4952; --band-tile: #135a64;
+    --band-track: #093d45; --band-rule: #22656f; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #161618; --surface: #1f1f23; --ink: #ffffff; --ink-2: #c7c7cc; --ink-3: #a1a1a6;
-  --rule: #2e2e32; --rule-2: #2a2a2e; --rule-strong: #48484d; --accent: #5ea2ff; --accent-soft: #17243a;
-  --on-accent: #0b1a2e; --good: #5cc27e; --bad: #ff7a6e; --t-embed: #3a3a3e; --t-encrypt: #636366;
-  --t-decrypt: #8e8e93; --t-model: #6b5c3a; --hex: #a1a1a6;
+  --paper: #0a161b; --surface: #11222a; --ink: #edf5f6; --ink-2: #c2d3d6; --ink-3: #95abaf;
+  --rule: #1f333a; --rule-2: #1a2d34; --rule-strong: #3c535a; --accent: #a5dee4; --accent-soft: #123840;
+  --on-accent: #08192d; --good: #5dac81; --bad: #f17c67; --t-embed: #2b3a3f; --t-encrypt: #4b5a5e;
+  --t-decrypt: #77969a; --t-model: #7a6431; --hex: #95abaf; --band: #0b4952; --band-tile: #135a64;
+  --band-track: #093d45; --band-rule: #22656f; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -47,15 +65,22 @@ body {
 }
 a { color: var(--accent); text-decoration: none; text-underline-offset: 3px; }
 a:hover { text-decoration: underline; }
-.page { max-width: 1080px; margin: 0 auto; padding: 28px 32px 48px; }
+.page { max-width: 1080px; margin: 0 auto; padding: 30px 32px 48px; }
+
+/* the band at the top: the logo's deep teal across the whole width, under the masthead, the lede and the tiles */
+.hero { background: var(--band); color: var(--band-ink); }
+.hero-in { max-width: 1080px; margin: 0 auto; padding: 26px 32px 44px; }
+.hero a, .hero .link { color: var(--kame); }
+.hero :focus-visible { outline-color: var(--kanzo); }
 
 /* masthead */
-.masthead { display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
-  padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
-.brand { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
-.wordmark { font: 600 22px/1 var(--display); letter-spacing: -0.01em; }
-.tag { font-size: 13px; color: var(--ink-2); letter-spacing: 0.02em; }
-.server { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; text-align: right; }
+.masthead { display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--band-rule); }
+.brand { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; }
+.mark { width: 22px; height: 29px; flex: none; }
+.wordmark { font: 700 22px/1 var(--display); letter-spacing: -0.015em; color: var(--band-ink); }
+.tag { font-size: 13px; color: var(--band-ink-3); letter-spacing: 0.02em; }
+.server { font-size: 13px; color: var(--band-ink-2); display: flex; align-items: center; gap: 8px; text-align: right; }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); flex: none; }
 .dot.ok { background: var(--good); }
 .dot.bad { background: var(--bad); }
@@ -71,9 +96,9 @@ a.link:hover { text-decoration: underline; }
 :lang(ko) { word-break: keep-all; }
 
 /* lede */
-.lede { padding: 44px 0 30px; max-width: 760px; }
-.lede h1 { font: 600 clamp(28px, 4vw, 40px)/1.15 var(--display); letter-spacing: -0.02em; margin: 0 0 16px; }
-.lede p { margin: 0; color: var(--ink-2); font-size: 17px; max-width: 640px; }
+.lede { padding: 42px 0 32px; max-width: 760px; }
+.lede h1 { font: 700 clamp(28px, 4vw, 42px)/1.12 var(--display); letter-spacing: -0.025em; margin: 0 0 16px; color: var(--band-ink); }
+.lede p { margin: 0; color: var(--band-ink-2); font-size: 17px; max-width: 640px; }
 
 /* tabs */
 .tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 30px; overflow-x: auto; }
@@ -163,28 +188,29 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .legend .total { border-top: 1px solid var(--rule-2); padding-top: 6px; margin-top: 2px; }
 
 /* throughput against the fastest existing scheme */
-.board { margin: -4px 0 40px; }
+.board { margin: 0; }
+.board h2 { color: var(--band-ink-3); }
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.tile { appearance: none; display: flex; flex-direction: column; text-align: left; font: inherit; color: var(--ink);
-  background: var(--surface); border: 1px solid transparent; border-radius: 12px; padding: 15px 16px 14px; cursor: pointer; }
-.tile:hover { border-color: var(--rule-strong); }
-.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.tile[aria-pressed="true"] { background: var(--accent-soft); }
-.tile .app { font-size: 13px; font-weight: 600; color: var(--ink-2); }
-.tile .x { font: 700 42px/1 var(--display); letter-spacing: -0.03em; color: var(--accent); margin: 10px 0 6px;
+.tile { appearance: none; display: flex; flex-direction: column; text-align: left; font: inherit; color: var(--band-ink);
+  background: var(--band-tile); border: 0; border-radius: 12px; padding: 15px 16px 14px; cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--band-rule); }
+.tile:hover { box-shadow: inset 0 0 0 1px var(--band-ink-3); }
+.tile:focus-visible { outline: 2px solid var(--kanzo); outline-offset: 2px; }
+.tile[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--kanzo); }
+.tile .app { font-size: 13px; font-weight: 600; color: var(--band-ink-2); }
+.tile .x { font: 700 44px/1 var(--display); letter-spacing: -0.03em; color: var(--kanzo); margin: 10px 0 6px;
   font-variant-numeric: tabular-nums; }
-.tile .than { font-size: 13px; line-height: 1.35; color: var(--ink-2); }
+.tile .than { font-size: 13px; line-height: 1.35; color: var(--band-ink-2); }
 .mini { display: grid; gap: 5px; margin-top: auto; padding-top: 12px; }
 .mrow { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; align-items: center; gap: 8px; font-size: 12px; }
-.mrow .n { color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mrow .b { height: 8px; background: var(--rule-2); border-radius: 4px; overflow: hidden; }
-.tile[aria-pressed="true"] .mrow .b { background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
-.mrow .b span { display: block; height: 100%; min-width: 2px; background: var(--t-decrypt); border-radius: 4px;
+.mrow .n { color: var(--band-ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mrow .b { height: 8px; background: var(--band-track); border-radius: 4px; overflow: hidden; }
+.mrow .b span { display: block; height: 100%; min-width: 2px; background: var(--band-base); border-radius: 4px;
   transform-origin: left center; }
-.mrow .v { min-width: 3.4em; text-align: right; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.mrow.ours .n { color: var(--accent); font-weight: 600; }
-.mrow.ours .b span { background: var(--accent); }
-.mrow.ours .v { color: var(--ink); font-weight: 600; }
+.mrow .v { min-width: 3.4em; text-align: right; color: var(--band-ink-2); font-variant-numeric: tabular-nums; }
+.mrow.ours .n { color: var(--kame); font-weight: 600; }
+.mrow.ours .b span { background: var(--kame); }
+.mrow.ours .v { color: var(--band-ink); font-weight: 600; }
 .board.grow .mrow .b span { animation: grow 1100ms cubic-bezier(.2, .7, .2, 1) both; }
 .board.grow .mrow.ours .b span { animation-delay: 150ms; }
 @keyframes grow { from { transform: scaleX(0); } }
@@ -234,7 +260,8 @@ body[data-db="passwords"] .field input, body[data-db="urls"] .field input { font
 .replayed.top { margin: 0 0 14px; }
 
 @media (max-width: 860px) {
-  .page { padding: 20px 16px 40px; }
+  .page { padding: 24px 16px 40px; }
+  .hero-in { padding: 20px 16px 32px; }
   /* one column: the input, then the race, then the answer and what left the client */
   .grid { display: flex; flex-direction: column; gap: 0; }
   .ask, .side { display: contents; }
