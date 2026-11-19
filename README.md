@@ -258,23 +258,25 @@ Like `altopir bench`, these programs time a batch from the received request byte
 new client keys for every query. Each scheme keeps the parameters of its official implementation, and ReinsPIRe uses
 the 54-bit modulus of its paper. The configurations are the fastest ones we found for each scheme and database size,
 and `scripts/reproduce.sh` lists them: the number of queries per run, the split of Valar into workers and threads, the
-interpolation degree of ReinsPIRe, and the `malloc` settings. YPIR+SP has no multi-core mode and runs its own
-benchmark program on one core, which times its online computation only. Two changes touch the official code. The
-InsPIRe command-line program encrypts its six RGSW ciphertexts with the same public seed, so its program here uses six
-independent seeds and parses each request with the public packing context of the server, which the official program
-rebuilds outside its timer. ReinsPIRe indexes its condensed database with 64-bit offsets, without which databases of
-32 GB and more crash.
+interpolation degree of ReinsPIRe, and the `malloc` settings. On 64 GB, each scheme uses its configuration for 32 GB,
+as in the paper. YPIR+SP has no multi-core mode and runs its own benchmark program on one core, which times its online
+computation only. Two changes touch the official code. The InsPIRe command-line program encrypts its six RGSW
+ciphertexts with the same public seed, so its program here uses six independent seeds and parses each request with the
+public packing context of the server, which the official program rebuilds outside its timer. ReinsPIRe indexes its
+condensed database with 64-bit offsets, without which databases of 32 GB and more crash.
 
 **Requirements and time.** The script needs `numactl`, Python 3 with matplotlib, git, rustup, and a C++ compiler. The
 ReinsPIRe build uses `bazel` from `PATH` or `BAZEL`, and otherwise downloads Bazel 9.3.0. On the server of the
 results above, the measurements take about 11.5 hours after the builds, most of it in the setup of the existing
 schemes on large databases. `SCHEMES=altopir ./scripts/reproduce.sh` measures AltoPIR alone in about 50 minutes.
+These times are for one process per configuration. The paper reports the median of three or more processes, and
+`PROCS=3` runs each existing scheme that way.
 
 **Placement.** By default, the script places the memory on the last NUMA node, runs the engine of every scheme on one
 hardware thread per core of that node, and creates and decrypts the queries of AltoPIR on the other cores. A program
 whose setup spills to other nodes moves its memory back before it measures, as the AltoPIR server does (see
-[Serve a database](#serve-a-database)). `SIZES`, `SCHEMES`, `PROCS` (processes per configuration, default 1), `NODE`,
-`CPUS`, `CLIENT_CPUS`, and `OUT` change these choices, for example
+[Serve a database](#serve-a-database)). `SIZES`, `SCHEMES`, `PROCS` (processes per configuration of an existing
+scheme, default 1), `NODE`, `CPUS`, `CLIENT_CPUS`, and `OUT` change these choices, for example
 `SIZES="1 8" SCHEMES="altopir reinspire" ./scripts/reproduce.sh`. A finished measurement is kept, so running the script
 again only measures what is missing and redraws the figures.
 
