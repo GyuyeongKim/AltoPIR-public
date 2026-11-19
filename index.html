@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AltoPIR · Private lookups</title>
+<meta name="description" content="Recorded private lookups with AltoPIR: leaked passwords, unsafe links, Wikipedia passages and passages for a language model, answered without the server learning what was asked.">
+<link rel="stylesheet" href="app.css?v=4ef89c1caa">
+<script>
+try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+if (new URLSearchParams(location.search).get("lang") === "ko") document.documentElement.lang = "ko";
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b4f5c'/%3E%3Cdefs%3E%3CclipPath id='k'%3E%3Ccircle cx='16' cy='12' r='6.4'/%3E%3Cpath d='M13.1 16.4h5.8L20.8 27H11.2z'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23k)' fill='%23a7dcd3'%3E%3Crect x='6' y='5.6' width='20' height='1.7'/%3E%3Crect x='6' y='8' width='20' height='1.7'/%3E%3Crect x='6' y='10.4' width='20' height='1.7'/%3E%3Crect x='6' y='12.8' width='20' height='1.7'/%3E%3Crect x='6' y='15.2' width='20' height='1.7' fill='%23f2a541'/%3E%3Crect x='6' y='17.6' width='20' height='1.7'/%3E%3Crect x='6' y='20' width='20' height='1.7'/%3E%3Crect x='6' y='22.4' width='20' height='1.7'/%3E%3Crect x='6' y='24.8' width='20' height='1.7'/%3E%3C/g%3E%3C/svg%3E">
+</head>
+<body>
+<div class="hero"><div class="hero-in">
+<header class="masthead">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 20 26" aria-hidden="true"><defs><clipPath id="keyhole"><circle cx="10" cy="8" r="8"/><path d="M6.4 13h7.2L16 26H4z"/></clipPath></defs><g clip-path="url(#keyhole)" fill="#a7dcd3"><rect x="0" y="0" width="20" height="2.1"/><rect x="0" y="3" width="20" height="2.1"/><rect x="0" y="6" width="20" height="2.1"/><rect x="0" y="9" width="20" height="2.1"/><rect x="0" y="12" width="20" height="2.1" fill="#f2a541"/><rect x="0" y="15" width="20" height="2.1"/><rect x="0" y="18" width="20" height="2.1"/><rect x="0" y="21" width="20" height="2.1"/><rect x="0" y="24" width="20" height="2.1"/></g></svg>
+    <span class="wordmark">AltoPIR</span>
+    <span class="tag" data-i18n="tag">private lookups on a CPU server</span>
+  </div>
+  <div class="mast-right">
+    <div class="server" id="server"><span class="dot" id="dot"></span><span id="server-text">Connecting to the server</span></div>
+    <a class="link ico-link" href="https://github.com/GyuyeongKim/AltoPIR-public"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+    <button id="lang" class="link" type="button" aria-label="Switch the language" data-i18n-aria="langAria">한국어</button>
+    <button id="theme" class="link" type="button" aria-label="Switch the color theme" data-i18n-aria="themeAria">Dark</button>
+  </div>
+</header>
+
+<section class="lede">
+  <h1 data-i18n="h1">Ask a database a question without telling it what you asked.</h1>
+  <p id="lede-text" data-i18n="lede">Your input never leaves this machine. It is hashed and encrypted here, the server computes over every record of its
+  database, and the answer comes back in a form that only this machine can read.</p>
+</section>
+
+<section class="board" id="board" hidden>
+  <h2 data-i18n="boardTitle">Throughput against the fastest existing scheme</h2>
+  <div class="tiles" id="tiles"></div>
+</section>
+</div></div>
+
+<div class="page">
+
+<nav class="tabs" role="tablist" aria-label="Databases" data-i18n-aria="tabsAria">
+  <button role="tab" class="tab" data-db="passwords" aria-selected="true" data-i18n="dbPasswords">Leaked passwords</button>
+  <button role="tab" class="tab" data-db="urls" aria-selected="false" data-i18n="dbUrls">Unsafe links</button>
+  <button role="tab" class="tab" data-db="rag" aria-selected="false" data-i18n="dbRag">RAG</button>
+  <button role="tab" class="tab" data-db="docs" aria-selected="false" data-i18n="dbDocs">Wikipedia</button>
+</nav>
+
+<main class="grid">
+  <section class="ask">
+    <p class="kicker" id="db-line"></p>
+    <form id="form" autocomplete="off">
+      <label for="input" class="label" id="input-label">Password</label>
+      <div class="field">
+        <input id="input" type="password" spellcheck="false">
+        <button type="button" class="reveal" id="reveal" aria-label="Show the password" data-i18n-aria="revealAria">Show</button>
+        <button type="submit" class="go" id="go">Check</button>
+      </div>
+      <div class="examples" id="examples"></div>
+    </form>
+    <div class="answer" id="answer" aria-live="polite">
+      <p class="placeholder" id="placeholder"></p>
+    </div>
+    <aside class="wire" id="wire" hidden>
+      <h2 id="wire-title">What left this machine</h2>
+      <div class="split">
+        <div>
+          <h3 id="stayed-title">Stayed here</h3>
+          <ul id="stayed"></ul>
+        </div>
+        <div>
+          <h3 data-i18n="received">The server received</h3>
+          <ul id="sent"></ul>
+        </div>
+      </div>
+      <figure class="hex">
+        <pre id="hex"></pre>
+        <figcaption data-i18n="hexCap">96 bytes from the start of the encrypted key in the request. The rest looks the same to the server.</figcaption>
+      </figure>
+      <div class="timing">
+        <h3 id="timing-title">Time of the live AltoPIR lookup</h3>
+        <div class="bar" id="bar"></div>
+        <dl class="legend" id="legend"></dl>
+      </div>
+    </aside>
+  </section>
+
+  <div class="side">
+    <div class="race" id="race" hidden>
+      <div class="race-head">
+        <h3 id="race-title">Time to the answer</h3>
+        <div class="load" id="load"></div>
+      </div>
+      <div id="race-rows"></div>
+      <p class="why" id="race-why"></p>
+      <p class="cap" id="race-cap"></p>
+    </div>
+    <div class="scan" id="scan" hidden>
+      <div class="scan-head">
+        <h3 id="scan-title">Inside the server, slowed down</h3>
+        <span class="slow" id="scan-slow"></span>
+      </div>
+      <canvas id="scan-canvas" aria-hidden="true"></canvas>
+      <p class="hint" id="scan-hint"></p>
+      <ol class="steps" id="scan-steps"></ol>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <p data-i18n-html="foot">Data: <a href="https://haveibeenpwned.com/Passwords">Pwned Passwords</a> by Have I Been Pwned,
+  <a href="https://github.com/Phishing-Database/Phishing.Database">Phishing.Database</a> (MIT), and
+  <a href="https://simple.wikipedia.org/">Simple English Wikipedia</a> (CC BY-SA 4.0), Wikipedia passages of
+  <a href="https://github.com/facebookresearch/DPR">DPR</a> and <a href="https://ai.google.com/research/NaturalQuestions">Natural Questions</a> (CC BY-SA 3.0).
+  Built with Llama. Code: <a href="https://github.com/GyuyeongKim/AltoPIR-public">AltoPIR</a>.</p>
+</footer>
+
+</div>
+<script src="replay.js?v=3fd4763e7c"></script>
+<script src="app.js?v=e530378924"></script>
+</body>
+</html>
