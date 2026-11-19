@@ -1,0 +1,18 @@
+[package]
+name = "valar-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+ipir-sp = { path = "../upstream/ipir-sp" }
+inspiring = { path = "../upstream/inspiring" }
+rayon = "1"
+libc = "0.2"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1

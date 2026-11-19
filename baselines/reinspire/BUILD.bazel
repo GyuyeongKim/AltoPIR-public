@@ -1,0 +1,17 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "reinspire_bench",
+    srcs = ["main.cc", "wire.h", "fixture.h", "pool.h"],
+    deps = [
+        "//crypto:encryption",
+        "//crypto:polynomial",
+        "//crypto/pir:pir_params",
+        "//crypto/pir/client:pir_client",
+        "//crypto/pir/server:pir_server",
+        "//crypto/pir/server:preprocessing_server",
+        "@com_github_google_shell_encryption//shell_encryption/prng",
+        "@com_github_google_shell_encryption//shell_encryption/prng:chacha_prng",
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
